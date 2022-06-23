@@ -1,4 +1,6 @@
 init.el~
-auto-save-list/
-var/
-transient/
+/eln-cache/
+/elpa/
+/auto-save-list/
+/var/
+/transient/
