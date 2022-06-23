@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 2022  Hunter Jozwiak
 
-;; Author: Hunter Jozwiak <sektor@tekunen>
-;; Keywords: convenience
+;; Author: Hunter Jozwiak <hunter.t.joz@gmail.com>
+;; Keywords: configuration
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,7 +21,9 @@
 ;;; Commentary:
 
 ;; Inclusion of the builtin parts of Emacs that my configuration will use.
-
+;;; For now, this module is quite nebulous.
+;; It will contain, in particular, all Emacs built in things that I find interesting enough  to try and configure.
+;; At some point in the future, I will probably split it off into other things.
 ;;; Code:
 
 (leaf cus-start
@@ -44,15 +46,28 @@
   :custom
   ((auto-revert-interval . 0.1))
   :global-minor-mode global-auto-revert-mode)
+
 ;; The weird, one off variable that Leaf can't seem to handle.
 (customize-set-variable 'auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+
 (leaf recentf
   :global-minor-mode recentf-mode)
 
 (leaf savehist
   :global-minor-mode savehist-mode)
+
 (leaf windmove)
+
 (leaf winner)
+;; Disable vc, for I am not a huge fan of it.
+;; I mainly use git repositories, so it has no value for me really.
+;; That and I like magit a LOT better.
+;; To be fair, I did try VC for all of five minutes.
+;; Maybe if someone can convince me of the value I will try it out  again.
+;; But for now, I'll switch it off and use magit.
+(leaf vc
+  :custom
+  ((vc-backends . nil)))
 (leaf auth-source
   :doc "Password completion from within Emacs."
   :tag "builtin" "passwords"
@@ -63,7 +78,7 @@
     :custom
     ((auth-sources . '(("~/.authinfo.gpg" password-store))))
      :config
-     (auth-source-pass-enable))
+     (auth-source-pass-enable)))
 
 (provide 'builtins)
 ;;; builtins.el ends here
