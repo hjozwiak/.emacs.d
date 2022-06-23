@@ -20,6 +20,10 @@
 ;;; Commentary:
 
 ;; The main loader for modules.
+;; There a re a few things that I want loaded here:
+;; * leaf, to serve as package manager.
+;; * no-littering
+;; * general.el, for later usage in keybindings.
 
 ;;; Code:
 
