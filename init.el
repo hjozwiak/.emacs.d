@@ -86,5 +86,6 @@
 (require 'builtins)
 (require 'a11y)
 (require 'communication)
+(require 'completion)
 (require 'evil-config)
 (require 'git)
