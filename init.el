@@ -85,5 +85,5 @@
 (add-to-list 'load-path (expand-file-name "emacspeak/lisp/" user-emacs-directory))
 (require 'builtins)
 (require 'a11y)
-(require 'evil)
+(require 'evil-config)
 (require 'git)

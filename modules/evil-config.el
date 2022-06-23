@@ -36,3 +36,4 @@
     :config
     (evil-collection-init))
   :global-minor-mode evil-mode)
+(provide 'evil-config)
