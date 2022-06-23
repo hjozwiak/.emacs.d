@@ -48,7 +48,42 @@
 
     :config
     (leaf-keywords-init))
-(leaf no-littering)
+(leaf no-littering :ensure t)
+(leaf general
+  :ensure t
+  :config
+  (general-evil-setup)
+  (general-create-definer mapleader
+    :prefix "SPC"
+    :global-prefix "C-SPC"
+    :keymaps 'override
+    :states '(normal visual emacs insert))
+    (mapleader
+  "b" '(:ignore t :which-key "Buffer management")
+  "bb" '(switch-to-buffer :which-key "Buffer management")
+  "bn" '(next-buffer :which-key "Next buffer")
+  "bd" '(evil-delete-buffer :which-key "Kill a buffer")
+  "bp" '(previous-buffer :which-key "Previous buffer")
+  "br" '(revert-buffer :which-key "Revert the current buffer")
+  "f" '(:ignore t :which-key "Files")
+  "ff" '(find-file :which-key "Find a file on disk")
+  "fs" '(save-buffer :which-key "Save changes")
+  "F" '(:ignore t :which-key "Frames")
+  "Fo" '(other-frame :which-key "Other frame")
+  "g" '(:ignore t :which-key "Git operations")
+  "h" '(:ignore t :which-key "Get help")
+  "hd" '(:ignore t :which-key "Describe parts of Emacs")
+  "hdb" '(describe-bindings :which-key "Describe the bindings that are in effect")
+  "hdB" '(general-describe-keybindings :which-key "Show the bindings that General has defined.")
+  "hdf" '(describe-function :which-key "Describe a function")
+  "hdF" '(describe-face :which-key "Describe a face")
+  "hdk" '(describe-key :which-key "Show the documentation for the function associated with key")
+  "hdv" '(describe-variable :which-key "Show the docs for a variable")
+  "hi" '(:ignore t :which-key "info things")
+  "hii" '(info :which-key "Enter the info index")))
 (add-to-list 'load-path (expand-file-name "modules/" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "emacspeak/lisp/" user-emacs-directory))
 (require 'builtins)
+(require 'a11y)
+(require 'evil)
+(require 'git)
