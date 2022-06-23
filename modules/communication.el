@@ -27,8 +27,11 @@
 ;;; Code:
 (leaf mastodon
   :ensure t)
-(leaf twittering
-  :ensure t)
+
+(leaf twittering-mode
+  :ensure t
+  :custom ((twittering-oauth-invoke-browser . t)
+           (twittering-allow-insecure-server-cert . t)))
 
 
 (provide 'communication)
