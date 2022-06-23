@@ -1,0 +1,3 @@
+[submodule "emacspeak"]
+	path = emacspeak
+	url = https://github.com/tvraman/emacspeak
