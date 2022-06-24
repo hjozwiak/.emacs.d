@@ -26,7 +26,34 @@
 
 ;;; Code:
 (leaf circe
-  :ensure t)
+  :ensure t
+  :preface
+  (customize-set-variable 'circe-network-options `(
+                                                   ("Libera"
+                                                    :sasl-username "sektor"
+                                                    :sasl-password ,(auth-source-pass-get 'secret "irc/libera.chat:6697/sektor")
+                                                    :host "irc.libera.chat"
+                                                    :port 6697
+                                                    :use-tls t
+                                                    :channels ("#archlinux" "#systemcrafters" "#sbcl" "#guix" "#emacs" "#pleroma" "#pleroma-dev"))
+                                                   ("Zeronode"
+                                                    :host "irc.zeronode.net"
+                                                    :port 6697
+                                                    :use-tls t
+                                                    :sasl-username "sektor"
+                                                    :sasl-password ,(auth-source-pass-get 'secret "irc/zeronode.net:6697/sektor")
+                                                    :channels ("#noagenda"))
+                                                   ("Stormmux"
+                                                     :host "irc.stormux.org"
+                                                     :port 6697
+                                                     :use-tls t
+                                                     :sasl-username "sektor"
+                                                     :sasl-password ,(auth-source-pass-get 'secret "irc/stormux.org:6697/sektor")
+                                                     :channels ("#a11y"))))
+  :custom
+  ((circe-default-nick . user-login-name)
+   (circe-auto-join-default-type . 'after-auth)))
+
 (leaf mastodon
   :ensure t)
 
