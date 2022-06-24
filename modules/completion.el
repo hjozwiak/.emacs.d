@@ -21,7 +21,7 @@
 ;;; Commentary:
 
 ;; I have become a fan of Vertico, Consult and Emmbark, so we'll use them.
-;; For code completions, I am thinking of going with Corfu.
+;; After trying Corfu for a while, I think I will go back to Company which I like a lot better.
 ;; Note that this design draws heavily on Rational Emacs for inspiration.
 
 ;;; Code:
@@ -34,18 +34,18 @@
            (vertico-cycle . t))
   :ensure t
   :global-minor-mode vertico-mode
-             
+  
   :config
   (general-define-key
-    :keymap vertico-map
-    "C-J" 'vertico-next
-    "C-k" 'vertico-previous)
+   :keymap vertico-map
+   "C-J" 'vertico-next
+   "C-k" 'vertico-previous)
   (leaf vertico-directory
     :config
     (general-define-key
-      :keymap vertico-map
-      "C-l" 'vertico-directory-down
-      "C-h" 'vertico-directory-up)))
+     :keymap vertico-map
+     "C-l" 'vertico-directory-down
+     "C-h" 'vertico-directory-up)))
 (leaf marginalia
   :ensure t
   :global-minor-mode marginalia-mode)
@@ -53,7 +53,10 @@
 (leaf consult
   :ensure t
   :custom
-  ((completion-in-region-function . #'consult-completion-in-region)))
+  ((completion-in-region-function . #'consult-completion-in-region))
+  :config
+  (general-define-key
+   [remap switch-to-buffer] 'consult-buffer))
 
 (leaf embark
   :ensure t
@@ -61,31 +64,21 @@
   (general-define-key
    [remap describe-bindings] 'embark-bindings
    "C-." 'embark-act)
-  :config
   (leaf embark-consult
     :ensure t
     :hook (embark-collect-mode-hook . consult-preview-at-point-mode)))
 
-(leaf corfu
+(leaf company
   :ensure t
   :custom
-  ((corfu-cycle . t)
-   (corfu-auto . t)
-   (corfu-echo-documentation . t)
-   (corfu-auto-prefix . 2)
-   (corfu-auto-delay . 0))
-  :global-minor-mode global-corfu-mode)
-(leaf corfu-doc
-  :ensure t
-  :hook
-  (corfu-mode-hook . corfu-doc-mode))
-(leaf cape
-  :ensure t
-  :advice
-  ((:around pcomplete-completions-at-point cape-wrap-silent)
-   (:around pcomplete-completions-at-point cape-wrap-purify))
+  ((company--idle-delay . 0)
+   (company-minimum-prefix-length . 2))
+  :global-minor-mode global-company-mode
   :config
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+  (leaf company-tabnine
+    :ensure t
+    :config
+    (unless (file-exists-p company-tabnine-binaries-folder)
+      (company-tabnine-install-binaries))
+    (add-to-list 'company-backends #'company-tabnine)))
 (provide 'completion)
-;;; completion.el ends here
