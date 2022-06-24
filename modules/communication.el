@@ -25,6 +25,8 @@
 ;; If there are other things that I can think of further on down the line, I'll include them also.
 
 ;;; Code:
+(leaf circe
+  :ensure t)
 (leaf mastodon
   :ensure t)
 
