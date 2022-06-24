@@ -76,7 +76,7 @@
   :config
   (leaf auth-source-pass
     :custom
-    ((auth-sources . '(("~/.authinfo.gpg" password-store))))
+    ((auth-sources . '("~/.authinfo.gpg" password-store)))
      :config
      (auth-source-pass-enable)))
 
