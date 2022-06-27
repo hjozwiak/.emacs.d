@@ -44,7 +44,7 @@
     :config
     (general-define-key
      :keymap vertico-map
-     "C-l" 'vertico-directory-down
+     "C-l" 'vertico-directory-enter
      "C-h" 'vertico-directory-up)))
 (leaf marginalia
   :ensure t
