@@ -16,23 +16,24 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
-;; The main loader for modules.
-;; There are a few things that I want loaded here:
-;; * leaf, to serve as package manager.
-;; * no-littering
-;; * general.el, for later usage in keybindings.
+;; This file is primarily designed to load in the modules under the modules directory.
 
 ;;; Code:
 
+
+
+
+(set-default-coding-systems 'utf-8)
 (customize-set-variable 'custom-file "custom.el")
 (when (file-exists-p custom-file)
 (load custom-file))
 (customize-set-variable 'package-archives
 			  '(("melpa" . "https://melpa.org/packages/")
+("org" . "https://orgmode.org/elpa/")
 			    ("gnu" . "https://elpa.gnu.org/packages/")))
   (package-initialize)
   (unless (package-installed-p 'leaf)
