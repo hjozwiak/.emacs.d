@@ -25,7 +25,10 @@
 ;;; Code:
 
 (leaf restart-emacs
-  :ensure t)
+  :ensure t
+  :config
+  (mapleader
+   "qr" '(restart-emacs :which-key "Restart Emacs")))
 (leaf helpful
   :ensure t
   :config
