@@ -93,4 +93,10 @@
 (require 'communication)
 (require 'completion)
 (require 'evil-config)
+(require 'gpg)
 (require 'git)
+(require 'org-config)
+(require 'programming)
+(require 'utilities)
+
+;;; init.el ends here
