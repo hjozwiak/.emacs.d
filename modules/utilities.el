@@ -35,7 +35,7 @@
   (general-define-key
    [remap describe-function] 'helpful-callable
    [remap describe-key] 'helpful-key
-   [remap describe-mode] 'helpful-mode))
+   [remap describe-variable] 'helpful-variable))
 
 (provide 'utilities)
 ;;; utilities.el ends here
