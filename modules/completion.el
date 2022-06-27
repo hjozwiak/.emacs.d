@@ -73,12 +73,7 @@
   :custom
   ((company--idle-delay . 0)
    (company-minimum-prefix-length . 2))
-  :global-minor-mode global-company-mode
-  :config
-  (leaf company-tabnine
-    :ensure t
-    :config
-    (unless (file-exists-p company-tabnine-binaries-folder)
-      (company-tabnine-install-binaries))
-    (add-to-list 'company-backends #'company-tabnine)))
+  :global-minor-mode global-company-mode)
+
 (provide 'completion)
+;;; completion.el ends here
