@@ -28,7 +28,7 @@
 (leaf orderless
   :ensure t
   :custom
-  ((completion--styles '(orderless))))
+  ((completion--styles . '(orderless))))
 (leaf vertico
   :custom ((vertico-count . 20)
            (vertico-cycle . t))
