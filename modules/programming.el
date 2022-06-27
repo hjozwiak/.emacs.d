@@ -1,4 +1,4 @@
-;;; lsp.el --- LSP configuration.                    -*- lexical-binding: t; -*-
+;;; programming.el --- LSP and programming in general configuration.                    -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Hunter Jozwiak
 
@@ -31,7 +31,22 @@
   :ensure t
   :custom
   ((eglot-autoshutdown . t)))
+(leaf flycheck
+  :ensure t
+  :global-minor-mode global-flycheck-mode
+  :config
+  (leaf flycheck-package
+    :ensure t
+    :config
+    (flycheck-package-setup))
+  (leaf flycheck-elsa
+    :ensure t
+    :config
+    (flycheck-elsa-setup)))
+(leaf smartparens
+  :ensure t
+  :global-minor-mode smartparens-strict-mode)
 
 
-(provide 'lsp)
-;;; lsp.el ends here
+(provide 'programming)
+;;; programming.el ends here
