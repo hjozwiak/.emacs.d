@@ -96,7 +96,7 @@
 (require 'gpg)
 (require 'org-config)
 (require 'programming)
-(require 'vc-config)
+(require 'version-control)
 (require 'utilities)
 
 ;;; init.el ends here
