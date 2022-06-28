@@ -26,7 +26,7 @@
 
 
 (set-default-coding-systems 'utf-8)
-(customize-set-variable 'custom-file "custom.el")
+(customize-set-variable 'custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
 (load custom-file))
 (customize-set-variable 'package-archives
