@@ -29,8 +29,8 @@
   :ensure t
   :custom
   (
-   (completion-category-overrides . '((file (styles . (partial-completion)))))
-                                  (completion--styles . '(orderless))))
+   (completion-category-overrides . '((file (styles . (basic partial-completion)))))
+                                  (completion-styles . '(orderless basic))))
 
 (leaf vertico
   :custom ((vertico-count . 20)
@@ -75,6 +75,11 @@
   :ensure t
   :custom
   ((corfu-cycle . t)
+   (corfu-quit-at-boundary . nil)
+   (corfu-quit-no-match . nil)
+   (corfu-preview-current . nil)
+   (corfu-on-exact-match . nil)
+   (corfu-preselect-first . nil)
    (corfu-auto . t)
    (corfu-auto-prefix . 2)
    (corfu-auto-delay . 0.0)

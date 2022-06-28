@@ -1,4 +1,4 @@
-;;; git.el --- Git packages for Emacs.               -*- lexical-binding: t; -*-
+;;; vc-config.el --- Git packages for Emacs.               -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Hunter Jozwiak
 
@@ -27,17 +27,22 @@
 
 (leaf magit
   :ensure t
+  :commands (magit-add-section-hook magit-status magit-stage-file)
   :defer-config
   (leaf forge
     :ensure t
+    :commands (forge-dispatch)
     :config
     (mapleader
       "gf" '(forge-dispatch :which-key "Operate with forges")))
   :config
-  :config
   (mapleader
     "gg" '(magit-status :which-key "Magit status")
     "gs" '(magit-stage-file :which-key "Stage the current working file."))
+  (magit-add-section-hook 'magit-status-sections-hook
+                          'magit-insert-modules
+                          'magit-insert-stashes
+                          'append)
   (leaf magit-gitflow
     :ensure t
     :hook (magit-mode-hook . turn-on-magit-gitflow))
@@ -47,5 +52,5 @@
     (mapleader
       "gt" '(git-timemachine-toggle :which-key "Toggle the time machine"))))
 
-(provide 'git)
+(provide 'vc-config)
 ;;; git.el ends here

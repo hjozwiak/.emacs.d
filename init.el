@@ -94,9 +94,9 @@
 (require 'completion)
 (require 'evil-config)
 (require 'gpg)
-(require 'git)
 (require 'org-config)
 (require 'programming)
+(require 'vc-config)
 (require 'utilities)
 
 ;;; init.el ends here
