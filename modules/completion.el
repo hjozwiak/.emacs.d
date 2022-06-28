@@ -25,6 +25,7 @@
 ;; Note that this design draws heavily on Rational Emacs for inspiration.
 
 ;;; Code:
+
 (leaf orderless
   :ensure t
   :custom
@@ -75,11 +76,6 @@
   :ensure t
   :custom
   ((corfu-cycle . t)
-   (corfu-quit-at-boundary . nil)
-   (corfu-quit-no-match . nil)
-   (corfu-preview-current . nil)
-   (corfu-on-exact-match . nil)
-   (corfu-preselect-first . nil)
    (corfu-auto . t)
    (corfu-auto-prefix . 2)
    (corfu-auto-delay . 0.0)
@@ -97,5 +93,6 @@
   :config
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
+
 (provide 'completion)
 ;;; completion.el ends here
