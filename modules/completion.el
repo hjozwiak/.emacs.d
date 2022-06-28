@@ -83,6 +83,7 @@
   :global-minor-mode global-corfu-mode
   :config
   (leaf corfu-doc
+    :ensure t
     :hook corfu-mode-hook))
 
 (leaf cape
