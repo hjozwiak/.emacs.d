@@ -27,11 +27,11 @@
 
 (leaf magit
   :ensure t
-  :commands (magit-add-section-hook magit-status magit-stage-file)
+  :commands magit-add-section-hook magit-status magit-stage-file
   :defer-config
   (leaf forge
     :ensure t
-    :commands (forge-dispatch)
+    :commands forge-dispatch
     :config
     (mapleader
       "gf" '(forge-dispatch :which-key "Operate with forges")))
