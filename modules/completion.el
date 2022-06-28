@@ -21,20 +21,22 @@
 ;;; Commentary:
 
 ;; I have become a fan of Vertico, Consult and Emmbark, so we'll use them.
-;; After trying Corfu for a while, I think I will go back to Company which I like a lot better.
+;; Let's give Corfu another go and actually sort things out.
 ;; Note that this design draws heavily on Rational Emacs for inspiration.
 
 ;;; Code:
 (leaf orderless
   :ensure t
   :custom
-  ((completion--styles . '(orderless))))
+  (
+   (completion-category-overrides . '((file (styles . (partial-completion)))))
+                                  (completion--styles . '(orderless))))
+
 (leaf vertico
   :custom ((vertico-count . 20)
            (vertico-cycle . t))
   :ensure t
   :global-minor-mode vertico-mode
-  
   :config
   (general-define-key
    :keymap vertico-map
@@ -64,16 +66,31 @@
   (general-define-key
    [remap describe-bindings] 'embark-bindings
    "C-." 'embark-act)
+
   (leaf embark-consult
     :ensure t
     :hook (embark-collect-mode-hook . consult-preview-at-point-mode)))
 
-(leaf company
+(leaf corfu
   :ensure t
   :custom
-  ((company--idle-delay . 0)
-   (company-minimum-prefix-length . 2))
-  :global-minor-mode global-company-mode)
+  ((corfu-cycle . t)
+   (corfu-auto . t)
+   (corfu-auto-prefix . 2)
+   (corfu-auto-delay . 0.0)
+   (corfu-echo-documentation . 0.25))
+  :global-minor-mode global-corfu-mode
+  :config
+  (leaf corfu-doc
+    :hook corfu-mode-hook))
 
+(leaf cape
+  :ensure t
+  :advice
+  ((:around pcomplete-completions-at-point cape-wrap-silent)
+   (:around pcomplete-completions-at-point cape-wrap-purify))
+  :config
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file))
 (provide 'completion)
 ;;; completion.el ends here
