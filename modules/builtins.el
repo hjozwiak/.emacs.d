@@ -26,53 +26,43 @@
 ;; At some point in the future, I will probably split it off into other things.
 ;;; Code:
 
-(leaf cus-start
-  :doc "Customize internal, lower level things."
-  :tag "builtin" "internal"
+(use-package emacs
   :custom
-  ((inhibit-startup-message . t)
-   (indent-tabs-mode . nil)
-   (tool-bar-mode . nil)
-   (menu-bar-mode . nil)
-   (scroll-bar-mode . nil)
-   (user-full-name . "Hunter Jozwiak")
-   (user-mail-address . "hunter.t.joz@gmail.com")
-   (user-login-name . "sektor")
-   (use-short-answers . t)))
+  (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+  (inhibit-startup-message t)
+   (indent-tabs-mode nil)
+   (tool-bar-mode nil)
+   (menu-bar-mode nil)
+   (scroll-bar-mode nil)
+   (user-full-name "Hunter Jozwiak")
+   (user-mail-address "hunter.t.joz@gmail.com")
+   (user-login-name "sektor")
+   (use-short-answers t))
 
-(leaf autorevert
-  :doc "Revert buffers on disk."
-  :tag "builtin"
+(use-package autorevert
   :custom
-  ((auto-revert-interval . 0.1))
-  :global-minor-mode global-auto-revert-mode)
+  (auto-revert-interval 0.1)
+:config
+    (global-auto-revert-mode))
 
-;; The weird, one off variable that Leaf can't seem to handle.
-(customize-set-variable 'auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
-(leaf recentf
-  :global-minor-mode recentf-mode)
+(use-package recentf
+  :config (recentf-mode))
 
-(leaf savehist
-  :global-minor-mode savehist-mode)
+(use-package savehist
+  :config (savehist-mode))
 
-(leaf windmove)
+(use-package windmove)
 
-(leaf winner)
-(leaf vc
+(use-package winner)
+(use-package auth-source
   :custom
-  ((vc-backends . nil)))
-(leaf auth-source
-  :doc "Password completion from within Emacs."
-  :tag "builtin" "passwords"
+  (auth-source-cache-expiry nil))
+(use-package auth-source-pass
   :custom
-  ((auth-source-cache-expiry . nil))
+  (auth-sources '("~/.authinfo.gpg" password-store))
   :config
-  (leaf auth-source-pass
-    :custom
-    ((auth-sources . '("~/.authinfo.gpg" password-store)))
-     :config
-     (auth-source-pass-enable)))
+  (auth-source-pass-enable))
 
 (provide 'builtins)
 ;;; builtins.el ends here

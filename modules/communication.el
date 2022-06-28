@@ -25,10 +25,10 @@
 ;; If there are other things that I can think of further on down the line, I'll include them also.
 
 ;;; Code:
-(leaf circe
+(use-package circe
   :ensure t
-  :preface
-  (customize-set-variable 'circe-network-options `(
+  :custom
+  (circe-network-options `(
                                                    ("Libera"
                                                     :sasl-username "sektor"
                                                     :sasl-password ,(auth-source-pass-get 'secret "irc/libera.chat:6697/sektor")
@@ -50,17 +50,16 @@
                                                      :sasl-username "sektor"
                                                      :sasl-password ,(auth-source-pass-get 'secret "irc/stormux.org:6697/sektor")
                                                      :channels ("#a11y"))))
-  :custom
-  ((circe-default-nick . user-login-name)
-   (circe-auto-join-default-type . 'after-auth)))
+  (circe-default-nick user-login-name)
+   (circe-auto-join-default-type 'after-auth))
 
-(leaf mastodon
+(use-package mastodon
   :ensure t)
 
-(leaf twittering-mode
+(use-package twittering-mode
   :ensure t
-  :custom ((twittering-oauth-invoke-browser . t)
-           (twittering-allow-insecure-server-cert . t)))
+  :custom (twittering-oauth-invoke-browser t)
+           (twittering-allow-insecure-server-cert t))
 
 
 (provide 'communication)

@@ -26,72 +26,69 @@
 
 ;;; Code:
 
-(leaf orderless
+(use-package orderless
   :ensure t
   :custom
-  (
-   (completion-category-overrides . '((file (styles . (basic partial-completion)))))
-                                  (completion-styles . '(orderless basic))))
+  (completion-category-overrides '((file (styles . (basic partial-completion)))))
+  (completion-styles '(orderless basic)))
 
-(leaf vertico
-  :custom ((vertico-count . 20)
-           (vertico-cycle . t))
+(use-package vertico
+  :custom (vertico-count 20)
+           (vertico-cycle t)
   :ensure t
-  :global-minor-mode vertico-mode
-  :config
-  (general-define-key
-   :keymap vertico-map
+  :general
+   (vertico-map
    "C-J" 'vertico-next
    "C-k" 'vertico-previous)
-  (leaf vertico-directory
-    :config
-    (general-define-key
-     :keymap vertico-map
+   :init
+   (vertico-mode 1))
+(use-package vertico-directory
+             :after vertico
+    :general
+     (vertico-map
      "C-l" 'vertico-directory-enter
-     "C-h" 'vertico-directory-up)))
-(leaf marginalia
+     "C-h" 'vertico-directory-up))
+(use-package marginalia
   :ensure t
-  :global-minor-mode marginalia-mode)
+  :config (marginalia-mode))
 
-(leaf consult
-  :ensure t
-  :custom
-  ((completion-in-region-function . #'consult-completion-in-region))
-  :config
-  (general-define-key
-   [remap switch-to-buffer] 'consult-buffer))
-
-(leaf embark
-  :ensure t
-  :config
-  (general-define-key
-   [remap describe-bindings] 'embark-bindings
-   "C-." 'embark-act)
-
-  (leaf embark-consult
-    :ensure t
-    :hook (embark-collect-mode-hook . consult-preview-at-point-mode)))
-
-(leaf corfu
+(use-package consult
   :ensure t
   :custom
-  ((corfu-cycle . t)
-   (corfu-auto . t)
-   (corfu-auto-prefix . 2)
-   (corfu-auto-delay . 0.0)
-   (corfu-echo-documentation . 0.25))
-  :global-minor-mode global-corfu-mode
-  :config
-  (leaf corfu-doc
-    :ensure t
-    :hook corfu-mode-hook))
+  (completion-in-region-function #'consult-completion-in-region)
+  :general
+   ([remap switch-to-buffer] 'consult-buffer))
 
-(leaf cape
+(use-package embark
   :ensure t
-  :advice
-  ((:around pcomplete-completions-at-point cape-wrap-silent)
-   (:around pcomplete-completions-at-point cape-wrap-purify))
+  :general
+   ([remap describe-bindings] 'embark-bindings
+   "C-." 'embark-act))
+
+(use-package embark-consult
+             :ensure t
+             :after (embark consult)
+    :hook (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-cycle t)
+   (corfu-auto t)
+   (corfu-auto-prefix 2)
+   (corfu-auto-delay 0.0)
+   (corfu-echo-documentation 0.25)
+   :config
+   (global-corfu-mode 1))
+(use-package corfu-doc
+  :ensure t
+  :hook (corfu-mode . corfu-doc-mode))
+
+(use-package cape
+  :ensure t
   :config
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
 

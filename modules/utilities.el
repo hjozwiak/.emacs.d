@@ -24,16 +24,15 @@
 
 ;;; Code:
 
-(leaf restart-emacs
+(use-package restart-emacs
   :ensure t
-  :config
+  :general
   (mapleader
    "qr" '(restart-emacs :which-key "Restart Emacs")))
-(leaf helpful
+(use-package helpful
   :ensure t
-  :config
-  (general-define-key
-   [remap describe-function] 'helpful-callable
+  :general
+   ([remap describe-function] 'helpful-callable
    [remap describe-key] 'helpful-key
    [remap describe-variable] 'helpful-variable))
 

@@ -23,9 +23,9 @@
 ;;  EPA for configuring the GPG interface that Emacs provides.
 
 ;;; Code:
-(leaf epa
+(use-package epa
   :custom
-  ((epa-pinentry-mode 'loopback)))
+  (epa-pinentry-mode 'loopback))
 
 
 (provide 'gpg)

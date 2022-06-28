@@ -24,16 +24,24 @@
 
 
 ;;; Code:
-(leaf undo-tree
+(use-package undo-tree
   :ensure t
-  :global-minor-mode global-undo-tree-mode)
+  :config (global-undo-tree-mode))
 
-(leaf evil
+(use-package evil
+             :ensure t
+             :custom
+             (evil-want-integration t)
+             (evil-want-C-i-jump nil)
+             (evil-want-keybind nil)
+             (evil-undo-system 'undo-tree)
+             :config
+             (evil-mode 1))
+(use-package evil-collection
   :ensure t
-  :defer-config
-  (leaf evil-collection
-    :ensure t
-    :config
-    (evil-collection-init))
-  :global-minor-mode evil-mode)
+             :after evil
+             :config
+             (evil-collection-init))
+
 (provide 'evil-config)
+;;; evil.el-config.el ends here

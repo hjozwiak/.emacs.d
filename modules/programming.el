@@ -26,26 +26,19 @@
 
 
 ;;; Code:
-(leaf eglot
+(use-package eglot
   :commands eglot-ensure
   :ensure t
   :custom
-  ((eglot-autoshutdown . t)))
-(leaf flycheck
+  (eglot-autoshutdown t))
+(use-package flycheck
   :ensure t
-  :global-minor-mode global-flycheck-mode
   :config
-  (leaf flycheck-package
-    :ensure t
-    :config
-    (flycheck-package-setup))
-  (leaf flycheck-elsa
-    :ensure t
-    :config
-    (flycheck-elsa-setup)))
-(leaf smartparens
-  :ensure t
-  :global-minor-mode smartparens-strict-mode)
+  (global-flycheck-mode 1))
+(use-package smartparens
+            :ensure t
+            :config
+            (smartparens-strict-mode 1))
 
 
 (provide 'programming)

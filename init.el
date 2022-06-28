@@ -25,8 +25,6 @@
 ;;; Code:
 
 
-
-
 (set-default-coding-systems 'utf-8)
 (customize-set-variable 'custom-file "custom.el")
 (when (file-exists-p custom-file)
@@ -35,23 +33,12 @@
 			  '(("melpa" . "https://melpa.org/packages/")
 			    ("gnu" . "https://elpa.gnu.org/packages/")))
   (package-initialize)
-  (unless (package-installed-p 'leaf)
+  (unless (package-installed-p 'use-package)
     (package-refresh-contents)
-    (package-install 'leaf))
-  (leaf leaf-keywords
-    :ensure t
-    :init
-    (leaf hydra
-      :ensure t)
-    (leaf el-get
-      :ensure t)
-    (leaf blackout
-      :ensure t)
-
-    :config
-    (leaf-keywords-init))
-(leaf no-littering :ensure t)
-(leaf general
+    (package-install 'use-package))
+(require 'use-package)
+(use-package no-littering :ensure t)
+(use-package general
   :ensure t
   :config
   (general-evil-setup)
@@ -87,15 +74,15 @@
   "qQ" '(kill-emacs :which key "Leave Emacs.")))
 (add-to-list 'load-path (expand-file-name "modules/" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "emacspeak/lisp/" user-emacs-directory))
-(require 'builtins)
-(require 'a11y)
-(require 'communication)
-(require 'completion)
-(require 'evil-config)
-(require 'gpg)
-(require 'org-config)
-(require 'programming)
-(require 'version-control)
-(require 'utilities)
+(use-package builtins)
+(use-package a11y)
+(use-package communication)
+(use-package completion)
+(use-package evil-config)
+(use-package gpg)
+(use-package org-config)
+(use-package programming)
+(use-package version-control)
+(use-package utilities)
 
 ;;; init.el ends here

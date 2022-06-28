@@ -26,12 +26,11 @@
 
 ;;; Code:
 
-(leaf emacspeak-setup
+(use-package emacspeak-setup
   :custom
-  ((espeak-default-speech-rate . 820)
-   (emacspeak-character-echo . nil)
-   (emacspeak-word-echo . nil))
-  :require t)
+  (espeak-default-speech-rate 820)
+   (emacspeak-character-echo nil)
+   (emacspeak-word-echo nil))
 
 (provide 'a11y)
 ;;; a11y.el ends here
