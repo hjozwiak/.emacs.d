@@ -59,12 +59,6 @@
 (leaf windmove)
 
 (leaf winner)
-;; Disable vc, for I am not a huge fan of it.
-;; I mainly use git repositories, so it has no value for me really.
-;; That and I like magit a LOT better.
-;; To be fair, I did try VC for all of five minutes.
-;; Maybe if someone can convince me of the value I will try it out  again.
-;; But for now, I'll switch it off and use magit.
 (leaf vc
   :custom
   ((vc-backends . nil)))
