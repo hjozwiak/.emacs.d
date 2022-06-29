@@ -24,24 +24,6 @@
 
 
 ;;; Code:
-(use-package undo-tree
-  :ensure t
-  :config (global-undo-tree-mode))
-
-(use-package evil
-             :ensure t
-             :custom
-             (evil-want-integration t)
-             (evil-want-C-i-jump nil)
-             (evil-want-keybind nil)
-             (evil-undo-system 'undo-tree)
-             :config
-             (evil-mode 1))
-(use-package evil-collection
-  :ensure t
-             :after evil
-             :config
-             (evil-collection-init))
 
 (provide 'evil-config)
 ;;; evil.el-config.el ends here

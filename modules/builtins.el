@@ -26,43 +26,13 @@
 ;; At some point in the future, I will probably split it off into other things.
 ;;; Code:
 
-(use-package emacs
-  :custom
-  (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-  (inhibit-startup-message t)
-   (indent-tabs-mode nil)
-   (tool-bar-mode nil)
-   (menu-bar-mode nil)
-   (scroll-bar-mode nil)
-   (user-full-name "Hunter Jozwiak")
-   (user-mail-address "hunter.t.joz@gmail.com")
-   (user-login-name "sektor")
-   (use-short-answers t))
-
-(use-package autorevert
-  :custom
-  (auto-revert-interval 0.1)
-:config
-    (global-auto-revert-mode))
 
 
-(use-package recentf
-  :config (recentf-mode))
 
-(use-package savehist
-  :config (savehist-mode))
 
 (use-package windmove)
 
 (use-package winner)
-(use-package auth-source
-  :custom
-  (auth-source-cache-expiry nil))
-(use-package auth-source-pass
-  :custom
-  (auth-sources '("~/.authinfo.gpg" password-store))
-  :config
-  (auth-source-pass-enable))
 
 (provide 'builtins)
 ;;; builtins.el ends here

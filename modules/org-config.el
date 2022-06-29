@@ -24,22 +24,5 @@
 
 ;;; Code:
 
-(use-package org
-  :preface
-  (defun org-setup ()
-    "Hook functions for when we enter an org buffer, not provided by any other major mode."
-    (prettify-symbols-mode 1)
-    (variable-pitch-mode 1))
-  :hook (org-mode . org-setup))
-
-(use-package org-appear
-             :after org
-             :hook okrg-mode)
-(use-package evil-org
-            :after org
-            :hook (org-mode . evil-org-mode)
-            :config
-            (require 'evil-org-agenda)
-            (evil-org-agenda-set-keys))
-(provide 'org-config)
+((provide 'org-config)
 ;;; org-config.el ends here

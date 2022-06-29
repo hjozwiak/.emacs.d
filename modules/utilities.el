@@ -24,17 +24,5 @@
 
 ;;; Code:
 
-(use-package restart-emacs
-  :ensure t
-  :general
-  (mapleader
-   "qr" '(restart-emacs :which-key "Restart Emacs")))
-(use-package helpful
-  :ensure t
-  :general
-   ([remap describe-function] 'helpful-callable
-   [remap describe-key] 'helpful-key
-   [remap describe-variable] 'helpful-variable))
-
 (provide 'utilities)
 ;;; utilities.el ends here

@@ -23,10 +23,6 @@
 ;;  EPA for configuring the GPG interface that Emacs provides.
 
 ;;; Code:
-(use-package epa
-  :custom
-  (epa-pinentry-mode 'loopback))
-
 
 (provide 'gpg)
 ;;; gpg.el ends here

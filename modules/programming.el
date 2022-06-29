@@ -26,19 +26,6 @@
 
 
 ;;; Code:
-(use-package eglot
-  :commands eglot-ensure
-  :ensure t
-  :custom
-  (eglot-autoshutdown t))
-(use-package flycheck
-  :ensure t
-  :config
-  (global-flycheck-mode 1))
-(use-package smartparens
-            :ensure t
-            :config
-            (smartparens-strict-mode 1))
 
 
 (provide 'programming)

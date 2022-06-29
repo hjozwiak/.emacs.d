@@ -25,28 +25,5 @@
 
 ;;; Code:
 
-(use-package magit
-  :ensure t
-  :general
-  (mapleader
-    "gg" '(magit-status :which-key "Magit status")
-    "gs" '(magit-stage-file :which-key "Stage the current working file."))
-  :config
-  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules 'magit-insert-stashes 'append))
-(use-package magit-gitflow
-    :ensure t
-    :hook (magit-mode . turn-on-magit-gitflow))
-(use-package git-timemachine
-    :ensure t
-    :general
-    (mapleader
-      "gt" '(git-timemachine-toggle :which-key "Toggle the time machine")))
-
-(use-package forge
-             :ensure t
-             :after magit
-             :general
-             (mapleader
-               "gf" '(forge-dispatch :which-key "Forge dispatching map.")))
 (provide 'version-control)
 ;;; version-control.el ends here

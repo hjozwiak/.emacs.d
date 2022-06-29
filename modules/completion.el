@@ -26,71 +26,9 @@
 
 ;;; Code:
 
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-category-overrides '((file (styles . (basic partial-completion)))))
-  (completion-styles '(orderless basic)))
 
-(use-package vertico
-  :custom (vertico-count 20)
-           (vertico-cycle t)
-  :ensure t
-  :general
-   (vertico-map
-   "C-J" 'vertico-next
-   "C-k" 'vertico-previous)
-   :init
-   (vertico-mode 1))
-(use-package vertico-directory
-             :after vertico
-    :general
-     (vertico-map
-     "C-l" 'vertico-directory-enter
-     "C-h" 'vertico-directory-up))
-(use-package marginalia
-  :ensure t
-  :config (marginalia-mode))
 
-(use-package consult
-  :ensure t
-  :custom
-  (completion-in-region-function #'consult-completion-in-region)
-  :general
-   ([remap switch-to-buffer] 'consult-buffer))
 
-(use-package embark
-  :ensure t
-  :general
-   ([remap describe-bindings] 'embark-bindings
-   "C-." 'embark-act))
-
-(use-package embark-consult
-             :ensure t
-             :after (embark consult)
-    :hook (embark-collect-mode . consult-preview-at-point-mode))
-
-(use-package corfu
-  :ensure t
-  :custom
-  (corfu-cycle t)
-   (corfu-auto t)
-   (corfu-auto-prefix 2)
-   (corfu-auto-delay 0.0)
-   (corfu-echo-documentation 0.25)
-   :config
-   (global-corfu-mode 1))
-(use-package corfu-doc
-  :ensure t
-  :hook (corfu-mode . corfu-doc-mode))
-
-(use-package cape
-  :ensure t
-  :config
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file))
 
 (provide 'completion)
 ;;; completion.el ends here

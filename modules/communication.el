@@ -25,41 +25,6 @@
 ;; If there are other things that I can think of further on down the line, I'll include them also.
 
 ;;; Code:
-(use-package circe
-  :ensure t
-  :custom
-  (circe-network-options `(
-                                                   ("Libera"
-                                                    :sasl-username "sektor"
-                                                    :sasl-password ,(auth-source-pass-get 'secret "irc/libera.chat:6697/sektor")
-                                                    :host "irc.libera.chat"
-                                                    :port 6697
-                                                    :use-tls t
-                                                    :channels ("#archlinux" "#systemcrafters" "#sbcl" "#guix" "#emacs" "#pleroma" "#pleroma-dev"))
-                                                   ("Zeronode"
-                                                    :host "irc.zeronode.net"
-                                                    :port 6697
-                                                    :use-tls t
-                                                    :sasl-username "sektor"
-                                                    :sasl-password ,(auth-source-pass-get 'secret "irc/zeronode.net:6697/sektor")
-                                                    :channels ("#noagenda"))
-                                                   ("Stormmux"
-                                                     :host "irc.stormux.org"
-                                                     :port 6697
-                                                     :use-tls t
-                                                     :sasl-username "sektor"
-                                                     :sasl-password ,(auth-source-pass-get 'secret "irc/stormux.org:6697/sektor")
-                                                     :channels ("#a11y"))))
-  (circe-default-nick user-login-name)
-   (circe-auto-join-default-type 'after-auth))
-
-(use-package mastodon
-  :ensure t)
-
-(use-package twittering-mode
-  :ensure t
-  :custom (twittering-oauth-invoke-browser t)
-           (twittering-allow-insecure-server-cert t))
 
 
 (provide 'communication)
