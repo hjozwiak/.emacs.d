@@ -332,6 +332,10 @@
     (mapleader
       "gt" '(git-timemachine-toggle :which-key "Toggle the time machine")))
 
+(use-package nix-mode
+  :ensure t
+  :mode "\\.nix\\'")
+
 (use-package helpful
   :ensure t
   :general

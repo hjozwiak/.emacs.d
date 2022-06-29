@@ -494,6 +494,14 @@ To the best of my knowledge, there are two packages that provide LSP support: LS
       (mapleader
         "gt" '(git-timemachine-toggle :which-key "Toggle the time machine")))
 #+end_src
+* Dev-opsy Things
+** Nix
+There is a wonderful package for editing nix files with Emacs, so let's take advantage of it.
+#+begin_src emacs-lisp
+  (use-package nix-mode
+    :ensure t
+    :mode "\\.nix\\'")
+#+end_src
 * Better Help With Helpful
 #+begin_src emacs-lisp
   (use-package helpful
