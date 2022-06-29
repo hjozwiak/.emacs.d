@@ -111,7 +111,7 @@
     "wh" '(windmove-left :which-key "Select the window to the left")
     "wl" '(windmove-right :which-key "Select the window to the right")
     "wj" '(windmove-down :which-key "Select the window below")
-    "wk" '(windmove-up :which-key "Select window above"))
+    "wk" '(windmove-up :which-key "Select window above")))
   (use-package winner
     :general
     (mapleader
@@ -202,7 +202,7 @@
 
 (use-package cape
   :ensure t
-  :demant t
+  :demand t
   :config
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
@@ -275,10 +275,12 @@
   :hook (org-mode . org-setup))
 
 (use-package org-appear
+  :ensure t
   :after org
   :hook (org-mode . org-appear-mode))
 
-use-package evil-org
+(use-package evil-org
+  :ensure t
   :after org
   :hook (org-mode . evil-org-mode)
   :config
@@ -338,6 +340,7 @@ use-package evil-org
    [remap describe-variable] 'helpful-variable))
 
 (use-package which-key
+  :ensure t
   :init
   (which-key-mode 1))
 

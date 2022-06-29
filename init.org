@@ -164,7 +164,7 @@ These two packages allow for easily getting around windows in Emacs. windmove pr
       "wh" '(windmove-left :which-key "Select the window to the left")
       "wl" '(windmove-right :which-key "Select the window to the right")
       "wj" '(windmove-down :which-key "Select the window below")
-      "wk" '(windmove-up :which-key "Select window above"))
+      "wk" '(windmove-up :which-key "Select window above")))
     (use-package winner
       :general
       (mapleader
@@ -290,7 +290,7 @@ For enhancing the things that completion at point can do. There are a few things
 #+begin_src emacs-lisp
   (use-package cape
     :ensure t
-    :demant t
+    :demand t
     :config
     (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
     (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
@@ -414,13 +414,15 @@ The note-taking, coffee brewing, all around awesome son of a gun.
 For toggling org elements.
 #+begin_src emacs-lisp
   (use-package org-appear
+    :ensure t
     :after org
     :hook (org-mode . org-appear-mode))
 #+end_src
 ** evil-org
 For enhancing the evil bindings when editing org buffers.
 #+begin_src emacs-lisp
-  use-package evil-org
+  (use-package evil-org
+    :ensure t
     :after org
     :hook (org-mode . evil-org-mode)
     :config
@@ -504,6 +506,7 @@ To the best of my knowledge, there are two packages that provide LSP support: LS
 * Which Key
 #+begin_src emacs-lisp
   (use-package which-key
+    :ensure t
     :init
     (which-key-mode 1))
 #+end_src
