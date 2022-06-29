@@ -77,6 +77,11 @@
   "q" '(:ignore t :which-key "Closing Emacs itself or frames within.")
   "qQ" '(kill-emacs :which key "Leave Emacs.")))
 
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
+
 (add-to-list 'load-path (expand-file-name "emacspeak/lisp/" user-emacs-directory))
 
 (use-package emacs

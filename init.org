@@ -110,6 +110,14 @@ This is a handy utility for creating keybindings, as well as a few other things 
     "q" '(:ignore t :which-key "Closing Emacs itself or frames within.")
     "qQ" '(kill-emacs :which key "Leave Emacs.")))
 #+end_src
+** Executing System Commands
+exec-path-from shell is quite handy for building a path for us to use in Emacs, so we should take advantage of this.
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
 ** Prepare the Load Path
 So that use-package knows where emacspeak is, we had better tell it beforehand.
 #+begin_src emacs-lisp
