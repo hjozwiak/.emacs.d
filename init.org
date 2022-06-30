@@ -463,6 +463,23 @@ To the best of my knowledge, there are two packages that provide LSP support: LS
     (smartparens-strict-mode 1))
 #+end_src
 * Projects
+** project.el
+The inbuilt project management system for Emacs. For the things I do, this works really well for me so I don't know that projectile is as necessary.
+#+begin_src emacs-lisp
+  (use-package project
+    :general
+    (mapleader
+      "SPC" '(consult-project-buffer :which-key "Switch to a buffer in a project")
+      "p" '(:ignore t :which-key "Project operations.")
+      "pa" '(project-remember-project :which-key "Add a project to the list")
+      "pf" '(project-find-file :which-key "Search for a file within a project")
+      "pp" '(project-switch-project :which-key "Switch to a project")
+      "ps" '(magit-project-status :which-key "Git status of a project")
+      :init
+      (unless (file-exists-p project-list-file)
+        (project-remember-projects-under "~/projects")
+        (project-remember-project "~/.emacs.d/"))))
+#+end_src
 ** Version Control
 *** magit
 #+begin_src emacs-lisp

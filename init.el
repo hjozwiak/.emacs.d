@@ -308,6 +308,20 @@
   :init
   (smartparens-strict-mode 1))
 
+(use-package project
+  :general
+  (mapleader
+    "SPC" '(consult-project-buffer :which-key "Switch to a buffer in a project")
+    "p" '(:ignore t :which-key "Project operations.")
+    "pa" '(project-remember-project :which-key "Add a project to the list")
+    "pf" '(project-find-file :which-key "Search for a file within a project")
+    "pp" '(project-switch-project :which-key "Switch to a project")
+    "ps" '(magit-project-status :which-key "Git status of a project")
+    :init
+    (unless (file-exists-p project-list-file)
+      (project-remember-projects-under "~/projects")
+      (project-remember-project "~/.emacs.d/"))))
+
 (use-package magit
   :ensure t
   :custom
