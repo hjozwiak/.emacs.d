@@ -308,12 +308,30 @@
   :init
   (smartparens-strict-mode 1))
 
+(use-package sly
+  :custom (inferior-lisp-program "sbcl")
+  :hook (lisp-mode . sly-editing-mode)
+  :ensure t)
+(use-package sly-asdf
+  :after sly
+  :ensure t)
+(use-package sly-quicklisp
+  :after sly
+  :ensure t)
+
+(use-package geiser
+  :ensure t
+  :custom (scheme-program-name "guile"))
+(use-package geiser-guile
+  :ensure t)
+
 (use-package project
   :general
   (mapleader
     "SPC" '(consult-project-buffer :which-key "Switch to a buffer in a project")
     "p" '(:ignore t :which-key "Project operations.")
     "pa" '(project-remember-project :which-key "Add a project to the list")
+    "pc" '(project-compile :which-key "Compile the project")
     "pf" '(project-find-file :which-key "Search for a file within a project")
     "pp" '(project-switch-project :which-key "Switch to a project")
     "ps" '(magit-project-status :which-key "Git status of a project")

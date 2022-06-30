@@ -462,6 +462,31 @@ To the best of my knowledge, there are two packages that provide LSP support: LS
     :init
     (smartparens-strict-mode 1))
 #+end_src
+* Languages
+** Lisp-flavored Languages
+*** Common Lisp
+Sly is a pretty good package for interacting with Common Lisp.
+#+begin_src emacs-lisp
+  (use-package sly
+    :custom (inferior-lisp-program "sbcl")
+    :hook (lisp-mode . sly-editing-mode)
+    :ensure t)
+  (use-package sly-asdf
+    :after sly
+    :ensure t)
+  (use-package sly-quicklisp
+    :after sly
+    :ensure t)
+#+end_src
+*** Scheme
+Configure Emacs to interact with various Shemes. For now, GNU Guile will be the one I configure, since I intend to do work with Guix.
+#+begin_src emacs-lisp
+  (use-package geiser
+    :ensure t
+    :custom (scheme-program-name "guile"))
+  (use-package geiser-guile
+    :ensure t)
+#+end_src
 * Projects
 ** project.el
 The inbuilt project management system for Emacs. For the things I do, this works really well for me so I don't know that projectile is as necessary.
@@ -472,6 +497,7 @@ The inbuilt project management system for Emacs. For the things I do, this works
       "SPC" '(consult-project-buffer :which-key "Switch to a buffer in a project")
       "p" '(:ignore t :which-key "Project operations.")
       "pa" '(project-remember-project :which-key "Add a project to the list")
+      "pc" '(project-compile :which-key "Compile the project")
       "pf" '(project-find-file :which-key "Search for a file within a project")
       "pp" '(project-switch-project :which-key "Switch to a project")
       "ps" '(magit-project-status :which-key "Git status of a project")
@@ -480,6 +506,9 @@ The inbuilt project management system for Emacs. For the things I do, this works
         (project-remember-projects-under "~/projects")
         (project-remember-project "~/.emacs.d/"))))
 #+end_src
+
+#+RESULTS:
+
 ** Version Control
 *** magit
 #+begin_src emacs-lisp
