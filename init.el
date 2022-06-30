@@ -355,6 +355,13 @@
   :ensure t
   :mode "\\.nix\\'")
 
+(use-package kubernetes
+  :ensure t
+  :general
+  (mapleader
+    "k" '(:ignore t :which-key "Kubernetes operations")
+    "ko" '(kubernetes-overview :which-key "Get an overview")))
+
 (use-package helpful
   :ensure t
   :general

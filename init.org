@@ -520,12 +520,26 @@ The inbuilt project management system for Emacs. For the things I do, this works
         "gt" '(git-timemachine-toggle :which-key "Toggle the time machine")))
 #+end_src
 * Dev-opsy Things
+For the wonderful world of infrastructure as code.
+There are a few things that I use.
+- For container orchestration, I tend to go for Kubernetes.
+- It's a tossup between Nix and Guix as to which one I will go with going forward, so may the best one win!
 ** Nix
 There is a wonderful package for editing nix files with Emacs, so let's take advantage of it.
 #+begin_src emacs-lisp
   (use-package nix-mode
     :ensure t
     :mode "\\.nix\\'")
+#+end_src
+** Kubernetes
+The behemoth of a container engine, but addmitedly interesting nonetheless.
+#+begin_src emacs-lisp
+  (use-package kubernetes
+    :ensure t
+    :general
+    (mapleader
+      "k" '(:ignore t :which-key "Kubernetes operations")
+      "ko" '(kubernetes-overview :which-key "Get an overview")))
 #+end_src
 * Better Help With Helpful
 #+begin_src emacs-lisp
