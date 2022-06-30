@@ -271,39 +271,16 @@ For providing annotations for completions in the minibuffer.
                :after (embark consult)
       :hook (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
-** Corfu
-A replacement for company, from what I can tell thus far. There are a few kinks that need to be ironed out.
-- When completing code, emacspeak only reads the documentation.
-- When typing in normal buffers, Emacspeak plays the progress chime which gets real annoying real fast.
-I suspect things will need to be hooked into and/or advised, so I will need to delve deeper into that.
+** Company
+The complete anything framework. I used this a lot in college and through various frameworks, and so have grown to like it a lot.
 #+begin_src emacs-lisp
-  (use-package corfu
+  (use-package company
     :ensure t
     :custom
-    (corfu-cycle t)
-     (corfu-auto t)
-     (corfu-auto-prefix 2)
-     (corfu-auto-delay 0.0)
-     (corfu-echo-documentation 0.25)
-     :init
-     (global-corfu-mode 1))
-  (use-package corfu-doc
-    :ensure t
-    :hook (corfu-mode . corfu-doc-mode))
-#+end_src
-** Completion at Point Functions
-For enhancing the things that completion at point can do. There are a few things here that I don't fully understand.
-- Functions are advised here to supress warnings, which helps out Corfu.
-- I wonder if these advices will interfeer in some way with Emacspeak, though I doubt this since the end result with Corfu completions is the same.
-#+begin_src emacs-lisp
-  (use-package cape
-    :ensure t
-    :demand t
-    :config
-    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    (add-to-list 'completion-at-point-functions #'cape-file))
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
+  (use-package company-box
+    :hook (company-mode . company-box))
 #+end_src
 * Communication
 Some external communication packages for talking with people across services such as IRC, Twitter, and the fedaverse.
@@ -436,6 +413,12 @@ For enhancing the evil bindings when editing org buffers.
     :config
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
+#+end_src
+** Making Tables of Contents
+[[https:github.com/alphapapa][Adam Porter]] makes some really good Emacs packages, namely org-maketoc which we will configure here.
+#+begin_src emacs-lisp
+  (use-package org-make-toc
+    :ensure t)
 #+end_src
 * Programming
 Various things for programming activities.

@@ -191,28 +191,13 @@
              :after (embark consult)
     :hook (embark-collect-mode . consult-preview-at-point-mode))
 
-(use-package corfu
+(use-package company
   :ensure t
   :custom
-  (corfu-cycle t)
-   (corfu-auto t)
-   (corfu-auto-prefix 2)
-   (corfu-auto-delay 0.0)
-   (corfu-echo-documentation 0.25)
-   :init
-   (global-corfu-mode 1))
-(use-package corfu-doc
-  :ensure t
-  :hook (corfu-mode . corfu-doc-mode))
-
-(use-package cape
-  :ensure t
-  :demand t
-  :config
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file))
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+(use-package company-box
+  :hook (company-mode . company-box))
 
 (use-package circe
   :ensure t
@@ -291,6 +276,9 @@
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
+
+(use-package org-make-toc
+  :ensure t)
 
 (use-package eglot
   :commands eglot-ensure
