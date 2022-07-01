@@ -209,7 +209,7 @@ For now, I make use of the Emacspeak package to provide spoken and auditory feed
      (emacspeak-character-echo nil)
      (emacspeak-word-echo nil))
 #+end_src
-*Completion
+* Completion
 ** Orderless
 #+begin_quote
 Completion style for matching regexps in any order --From the brief package summary
@@ -278,10 +278,24 @@ The complete anything framework. I used this a lot in college and through variou
     :ensure t
     :custom
     (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+    (company-idle-delay 0.0)
+    :init
+    (global-company-mode))
   (use-package company-box
-    :hook (company-mode . company-box))
+    :ensure t
+    :hook (company-mode . company-box-mode))
 #+end_src
+*** Yasnippet
+For providing snippets for commonly typed things.
+#+BEGIN_SRC  emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :init
+    (yas-global-mode 1))
+  (use-package yasnippet-snippets
+    :ensure t
+    :after yasnippet)
+#+END_SRC
 * Communication
 Some external communication packages for talking with people across services such as IRC, Twitter, and the fedaverse.
 ** IRC

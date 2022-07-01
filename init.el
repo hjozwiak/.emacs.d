@@ -195,9 +195,20 @@
   :ensure t
   :custom
   (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
+  (company-idle-delay 0.0)
+  :init
+  (global-company-mode))
 (use-package company-box
-  :hook (company-mode . company-box))
+  :ensure t
+  :hook (company-mode . company-box-mode))
+
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1))
+(use-package yasnippet-snippets
+  :ensure t
+  :after yasnippet)
 
 (use-package circe
   :ensure t
