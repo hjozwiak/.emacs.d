@@ -1,3 +1,6 @@
 [submodule "emacspeak"]
 	path = emacspeak
 	url = https://github.com/tvraman/emacspeak
+[submodule "borg"]
+	path = lib/borg
+	url = git@github.com:emacscollective/borg.git
