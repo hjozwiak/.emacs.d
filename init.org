@@ -67,6 +67,21 @@ As mentioned previously, I make heavy use of use-package henceforth to do actual
     (package-install 'use-package))
   (require 'use-package)
 #+end_src
+** Quelpa and Associates
+For getting packages that haven't quite made it into MELPA as yet.
+#+BEGIN_SRC emacs-lisp
+  (use-package quelpa
+    :ensure t)
+
+  (use-package quelpa-use-package
+    :ensure t
+    :after quelpa)
+#+END_SRC
+** no-littering
+This package keeps your config directory clean of cruft that will accumulate over time.
+#+begin_src emacs-lisp
+  (use-package no-littering :ensure t)
+#+end_src
 ** no-littering
 This package keeps your config directory clean of cruft that will accumulate over time.
 #+begin_src emacs-lisp
@@ -298,55 +313,17 @@ For providing snippets for commonly typed things.
 #+END_SRC
 * Communication
 Some external communication packages for talking with people across services such as IRC, Twitter, and the fedaverse.
-** IRC
-I've come to enjoy circe as an IRC client.
-- It's easier to configure than erc.
-- It supports SASL out of the box.
-- Unfortunately, it doesn't automatically connect to the networks I define in circe-network-options like rcirc, but that is something I plan to address soon.
-#+begin_src emacs-lisp
-  (use-package circe
-    :ensure t
+** Matrix
+I am going to use IRC as a bridge to things like IRC, Discord, etc.
+
+I quite like it and find it relatively useful as a bouncer, so let's make use of it.
+#+BEGIN_SRC  emacs-lisp
+  (use-package ement
     :custom
-    (circe-network-options `(
-                                                     ("Libera"
-                                                      :sasl-username "sektor"
-                                                      :sasl-password ,(auth-source-pass-get 'secret "irc/libera.chat:6697/sektor")
-                                                      :host "irc.libera.chat"
-                                                      :port 6697
-                                                      :use-tls t
-                                                      :channels ("#archlinux" "#systemcrafters" "#sbcl" "#guix" "#emacs" "#pleroma" "#pleroma-dev"))
-                                                     ("Zeronode"
-                                                      :host "irc.zeronode.net"
-                                                      :port 6697
-                                                      :use-tls t
-                                                      :sasl-username "sektor"
-                                                      :sasl-password ,(auth-source-pass-get 'secret "irc/zeronode.net:6697/sektor")
-                                                      :channels ("#noagenda"))
-                                                     ("Stormmux"
-                                                       :host "irc.stormux.org"
-                                                       :port 6697
-                                                       :use-tls t
-                                                       :sasl-username "sektor"
-                                                       :sasl-password ,(auth-source-pass-get 'secret "irc/stormux.org:6697/sektor")
-                                                       :channels ("#a11y"))))
-    (circe-default-nick user-login-name)
-     (circe-auto-join-default-type 'after-auth))
-#+end_src
-** Mastodon
-For communicating across the fedaverse.
-#+begin_src emacs-lisp
-  (use-package mastodon
-    :ensure t)
-#+end_src
-** twittering
-Communication with Twitter.
-#+begin_src emacs-lisp
-  (use-package twittering-mode
-    :ensure t
-    :custom (twittering-oauth-invoke-browser t)
-             (twittering-allow-insecure-server-cert t))
-#+end_src
-* Evil
+    (ement-initial-sync-timeout 3600)
+    :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
+#+END_SRC
+** Mastodon For communicating across the fedaverse. #+begin_src emacs-lisp (use-package mastodon :ensure t) #+end_src ** twittering Communication with Twitter. #+begin_src emacs-lisp (use-package twittering-mode :ensure t :custom (twittering-oauth-invoke-browser t) (twittering-allow-insecure-server-cert t)) #+end_src * Evil
 ** undo-tree
 #+begin_quote
 Emacs has a powerful undo system. Unlike the standard undo/redo system in
