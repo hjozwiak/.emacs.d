@@ -30,25 +30,26 @@
 (when (file-exists-p custom-file)
 (load custom-file))
 
-(customize-set-variable 'package-archives
-                          '(("melpa" . "https://melpa.org/packages/")))
+(defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
-(package-initialize)
-(unless (package-installed-p 'quelpa)
-  (with-temp-buffer
-    (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
-    (eval-buffer)
-    (quelpa-self-upgrade)))
+(straight-use-package 'use-package)
+(customize-set-variable 'straight-use-package-by-default t)
 
-(unless (package-installed-p 'use-package)
-  (quelpa 'use-package)
-(require 'use-package)
-(customize-variable 'use-package-ensure-function #'quelpa)
-
-(use-package no-littering :ensure t)
+(use-package no-littering)
 
 (use-package general
-  :ensure t
+
   :config
   (general-evil-setup)
   (general-create-definer mapleader
@@ -83,13 +84,14 @@
   "qQ" '(kill-emacs :which key "Leave Emacs.")))
 
 (use-package exec-path-from-shell
-  :ensure t
+
   :config
   (exec-path-from-shell-initialize))
 
 (add-to-list 'load-path (expand-file-name "emacspeak/lisp/" user-emacs-directory))
 
 (use-package emacs
+  :straight nil
   :custom
   (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
   (inhibit-startup-message t)
@@ -103,18 +105,22 @@
    (use-short-answers t))
 
 (use-package autorevert
+  :straight nil
   :custom
   (auto-revert-interval 0.1)
 :config
     (global-auto-revert-mode))
 
 (use-package recentf
+  :straight nil
   :config (recentf-mode))
 
 (use-package savehist
+  :straight nil
   :config (savehist-mode))
 
 (use-package windmove
+  :straight nil
   :general
   (mapleader
     "w" '(:ignore t :which-key "Window operations")
@@ -122,7 +128,8 @@
     "wl" '(windmove-right :which-key "Select the window to the right")
     "wj" '(windmove-down :which-key "Select the window below")
     "wk" '(windmove-up :which-key "Select window above")))
-  (use-package winner
+(use-package winner
+  :straight nil
     :general
     (mapleader
       "wr" '(winner-redo :which-key "Restore a window configuration")
@@ -131,19 +138,23 @@
     (winner-mode))
 
 (use-package auth-source
+  :straight nil
   :custom
   (auth-source-cache-expiry nil))
 (use-package auth-source-pass
+  :straight nil
   :custom
   (auth-sources '("~/.authinfo.gpg" password-store))
   :config
   (auth-source-pass-enable))
 
 (use-package epa
+  :straight nil
   :custom
   (epa-pinentry-mode 'loopback))
 
 (use-package emacspeak-setup
+  :straight nil
   :custom
   (espeak-default-speech-rate 820)
    (emacspeak-character-echo nil)
@@ -158,14 +169,15 @@
 (use-package vertico
   :custom (vertico-count 20)
            (vertico-cycle t)
-  :ensure t
   :general
    (vertico-map
    "C-J" 'vertico-next
    "C-k" 'vertico-previous)
    :init
    (vertico-mode 1))
+(add-to-list 'load-path (expand-file-name "straight/build/vertico/extensions" user-emacs-directory))
 (use-package vertico-directory
+  :straight nil
              :after vertico
     :general
      (vertico-map
@@ -173,49 +185,45 @@
      "C-h" 'vertico-directory-up))
 
 (use-package marginalia
-  :ensure t
   :config (marginalia-mode))
 
 (use-package consult
-  :ensure t
-  :demand t
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   :general
    ([remap switch-to-buffer] 'consult-buffer))
 
 (use-package embark
-  :ensure t
-  :demand t
   :general
    ([remap describe-bindings] 'embark-bindings
    "C-." 'embark-act))
 
 (use-package embark-consult
-             :ensure t
+
              :after (embark consult)
     :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package company
-  :ensure t
+
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0)
   :init
   (global-company-mode))
 (use-package company-box
-  :ensure t
+
   :hook (company-mode . company-box-mode))
 
 (use-package yasnippet
-  :ensure t
+
   :init
   (yas-global-mode 1))
 (use-package yasnippet-snippets
-  :ensure t
+
   :after yasnippet)
 
 (use-package org
+
   :preface
   (defun org-setup ()
     "Hook functions for when we enter an org buffer, not provided by any other major mode."
@@ -224,55 +232,48 @@
   :hook (org-mode . org-setup))
 
 (use-package org-appear
-  :ensure t
+
   :after org
   :hook (org-mode . org-appear-mode))
 
 (use-package evil-org
-  :ensure t
+
   :after org
   :hook (org-mode . evil-org-mode)
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
-(use-package org-make-toc
-  :ensure t)
+(use-package org-make-toc)
 
 (use-package eglot
   :commands eglot-ensure
-  :ensure t
   :custom
   (eglot-autoshutdown t))
 
 (use-package flycheck
-  :ensure t
   :init
   (global-flycheck-mode 1))
 
 (use-package smartparens
-  :ensure t
+
   :init
   (smartparens-strict-mode 1))
 
 (use-package sly
   :custom (inferior-lisp-program "sbcl")
-  :hook (lisp-mode . sly-editing-mode)
-  :ensure t)
+  :hook (lisp-mode . sly-editing-mode))
 (use-package sly-asdf
-  :after sly
-  :ensure t)
+  :after sly)
 (use-package sly-quicklisp
-  :after sly
-  :ensure t)
+  :after sly)
 
 (use-package geiser
-  :ensure t
   :custom (scheme-program-name "guile"))
-(use-package geiser-guile
-  :ensure t)
+(use-package geiser-guile)
 
 (use-package project
+  :straight nil
   :general
   (mapleader
     "SPC" '(consult-project-buffer :which-key "Switch to a buffer in a project")
@@ -288,7 +289,6 @@
       (project-remember-project "~/.emacs.d/"))))
 
 (use-package magit
-  :ensure t
   :custom
   (magit-delete-by-moving-to-trash nil)
   :commands magit-add-section-hook magit-status magit-stage-file
@@ -300,63 +300,64 @@
   (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules 'magit-insert-stashes 'append))
 
 (use-package forge
-             :ensure t
              :after magit
              :general
              (mapleader
                "gf" '(forge-dispatch :which-key "Forge dispatching map.")))
 
 (use-package magit-gitflow
-    :ensure t
+
     :hook (magit-mode . turn-on-magit-gitflow))
 
 (use-package git-timemachine
-    :ensure t
     :general
     (mapleader
       "gt" '(git-timemachine-toggle :which-key "Toggle the time machine")))
 
 (use-package nix-mode
-  :ensure t
   :mode "\\.nix\\'")
 
 (use-package kubernetes
-  :ensure t
   :general
   (mapleader
     "k" '(:ignore t :which-key "Kubernetes operations")
     "ko" '(kubernetes-overview :which-key "Get an overview")))
 
 (use-package helpful
-  :ensure t
+
   :general
    ([remap describe-function] 'helpful-callable
    [remap describe-key] 'helpful-key
    [remap describe-variable] 'helpful-variable))
 
 (use-package which-key
-  :ensure t
+
   :init
   (which-key-mode 1))
 
 (use-package restart-emacs
-  :ensure t
+
   :general
   (mapleader
    "qr" '(restart-emacs :which-key "Restart Emacs")))
 
 (use-package ement
+  :straight (ement :type git :host github :repo "alphapapa/ement.el")
   :custom
-  (ement-initial-sync-timeout 10000)
-  :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
+  (ement-initial-sync-timeout 10000))
+
+(use-package mastodon)
+
+(use-package twittering-mode
+  :custom
+  (twittering-oauth-invoke-browser t)
+  (twittering-allow-insecure-server-cert t))
 
 (use-package undo-tree
-  :ensure t
   :init
   (global-undo-tree-mode 1))
 
 (use-package evil
-             :ensure t
              :custom
              (evil-want-integration t)
              (evil-want-C-i-jump nil)
@@ -366,7 +367,6 @@
              (evil-mode 1))
 
 (use-package evil-collection
-  :ensure t
              :after evil
              :config
              (evil-collection-init))

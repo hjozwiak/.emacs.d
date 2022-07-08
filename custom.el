@@ -3,8 +3,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(epg-pinentry-mode 'loopback nil nil "Customized with use-package epa")
  '(package-selected-packages
-   '(transient-dwim speechd-el quelpa-use-package quelpa ement achievements company-box yasnippet-snippets yasnippet company org-make-toc geiser-guile geiser sly-quicklisp sly-asdf sly kubernetes exec-path-from-shell nix-mode yaml-mode org-appear cape macrostep evil-org restart-emacs which-key helpful git-timemachine magit-gitflow forge magit smartparens flycheck eglot evil-collection evil undo-tree twittering-mode mastodon circe corfu-doc corfu embark-consult embark consult marginalia vertico orderless general no-littering use-package)))
+   '(sly-quicklisp sly-asdf popup sly smartparens flycheck pkg-info epl eglot org-make-toc s evil-org evil goto-chg org-appear yasnippet-snippets yasnippet company-box frame-local dash company embark-consult embark consult marginalia orderless exec-path-from-shell general no-littering compat quelpa-use-package use-package bind-key quelpa)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

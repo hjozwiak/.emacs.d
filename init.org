@@ -9,7 +9,7 @@ That, and I think it is interesting to learn more about org-mode and all the fea
 * Starting Out
 I rely on a few things to make my config work properly.
 - use-package to fetch and install packages.
-- MELPA/ELPA for the main bulk of packages; I did use straight for a while but I don't think it is strictly necessary so package will do fine.
+- Straight to do the actual installation and dependency management.
 - Some sort of spoken output. For now, I am relying on Emacspeak to provide this, but might switch to speechd-el.
 ** Set Up Some Encoding Systems
 My particular machine is uses UTF-8, so we need to inform Emacs of this.
@@ -51,37 +51,46 @@ But for now, the custom interface serves more as a source of knowledge along wit
   (when (file-exists-p custom-file)
   (load custom-file))
 #+end_src
-** Load in Some Package Archives
-I get packages primariy from [[https:melpa.org][MELPA]] and [[https:elpa.gnu.org][GNU ELPA]].
-#+begin_src emacs-lisp
-  (customize-set-variable 'package-archives
-                            '(("melpa" . "https://melpa.org/packages/")))
-
-  (package-initialize)
-  (unless (package-installed-p 'quelpa)
-    (with-temp-buffer
-      (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
-      (eval-buffer)
-      (quelpa-self-upgrade)))
+** Straight
+First, kill package.el so Straight can have full control.
+#+begin_src emacs-lisp :tangle ./early-init.el
+  ;;; early-init.el -*- lexical-binding: t; -*-
+  (setq package-enable-at-startup nil
+         package-quickstart nil)
+  ;; Local Variables:
+  ;; no-byte-compile: t
+  ;; End:
+#+end_src
+  #+begin_src emacs-lisp
+    (defvar bootstrap-version)
+      (let ((bootstrap-file
+	     (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	    (bootstrap-version 5))
+	(unless (file-exists-p bootstrap-file)
+	  (with-current-buffer
+	      (url-retrieve-synchronously
+	       "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	       'silent 'inhibit-cookies)
+	    (goto-char (point-max))
+	    (eval-print-last-sexp)))
+	(load bootstrap-file nil 'nomessage))
 #+end_src
 **  Get use-package
 As mentioned previously, I make heavy use of use-package henceforth to do actual loading and configuration work.
 #+begin_src emacs-lisp
-  (unless (package-installed-p 'use-package)
-    (quelpa 'use-package)
-  (require 'use-package)
-  (customize-variable 'use-package-ensure-function #'quelpa)
+  (straight-use-package 'use-package)
+  (customize-set-variable 'straight-use-package-by-default t)
 #+end_src
 ** no-littering
 This package keeps your config directory clean of cruft that will accumulate over time.
 #+begin_src emacs-lisp
-  (use-package no-littering :ensure t)
+  (use-package no-littering)
 #+end_src
 ** general.el
 This is a handy utility for creating keybindings, as well as a few other things that I don't really make much youse of.
 #+begin_src emacs-lisp
   (use-package general
-    :ensure t
+
     :config
     (general-evil-setup)
     (general-create-definer mapleader
@@ -119,7 +128,7 @@ This is a handy utility for creating keybindings, as well as a few other things 
 exec-path-from shell is quite handy for building a path for us to use in Emacs, so we should take advantage of this.
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
-    :ensure t
+
     :config
     (exec-path-from-shell-initialize))
 #+end_src
@@ -134,6 +143,7 @@ Admittedly, this section is a bit nebulous and should probably be refactored as 
 I'm not exactly sure of the best way to do this, but I recall from a config elsewhere that did a use-package emacs to customize things like this.
 #+begin_src emacs-lisp
   (use-package emacs
+    :straight nil
     :custom
     (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
     (inhibit-startup-message t)
@@ -150,6 +160,7 @@ I'm not exactly sure of the best way to do this, but I recall from a config else
 For changing buffers when the underlying file on disk is changed.
 #+begin_src emacs-lisp
   (use-package autorevert
+    :straight nil
     :custom
     (auto-revert-interval 0.1)
   :config
@@ -159,18 +170,21 @@ For changing buffers when the underlying file on disk is changed.
 For keeping track of files that you have recently visited.
 #+begin_src emacs-lisp
   (use-package recentf
+    :straight nil
     :config (recentf-mode))
 #+end_src
 ** savehist
 Logs your command history.
 #+begin_src emacs-lisp
   (use-package savehist
+    :straight nil
     :config (savehist-mode))
 #+end_src
 ** windmove and Winner
 These two packages allow for easily getting around windows in Emacs. windmove provides movement commands, and winner allows for the undo and redo of window configurations.
 #+begin_src emacs-lisp
   (use-package windmove
+    :straight nil
     :general
     (mapleader
       "w" '(:ignore t :which-key "Window operations")
@@ -178,7 +192,8 @@ These two packages allow for easily getting around windows in Emacs. windmove pr
       "wl" '(windmove-right :which-key "Select the window to the right")
       "wj" '(windmove-down :which-key "Select the window below")
       "wk" '(windmove-up :which-key "Select window above")))
-    (use-package winner
+  (use-package winner
+    :straight nil
       :general
       (mapleader
         "wr" '(winner-redo :which-key "Restore a window configuration")
@@ -190,9 +205,11 @@ These two packages allow for easily getting around windows in Emacs. windmove pr
 I rely heavily on pass for doing management of my main logins; the only reason I have an authinfo file is for forge, though I suspect given a bit of code spelunking and some inginuity I could change this.
 #+begin_src emacs-lisp
   (use-package auth-source
+    :straight nil
     :custom
     (auth-source-cache-expiry nil))
   (use-package auth-source-pass
+    :straight nil
     :custom
     (auth-sources '("~/.authinfo.gpg" password-store))
     :config
@@ -202,6 +219,7 @@ I rely heavily on pass for doing management of my main logins; the only reason I
 This used to be its own module, but since it stood alone it might as well be collapsed into here.
 #+begin_src emacs-lisp
   (use-package epa
+    :straight nil
     :custom
     (epa-pinentry-mode 'loopback))
 #+end_src
@@ -209,6 +227,7 @@ This used to be its own module, but since it stood alone it might as well be col
 For now, I make use of the Emacspeak package to provide spoken and auditory feedback for Emacs. It resides as a submodule of this git repository, so loading it is pretty trivial with use-package.
 #+begin_src emacs-lisp
   (use-package emacspeak-setup
+    :straight nil
     :custom
     (espeak-default-speech-rate 820)
      (emacspeak-character-echo nil)
@@ -233,14 +252,15 @@ A nice package for completing things like file names, commands, and so much more
   (use-package vertico
     :custom (vertico-count 20)
              (vertico-cycle t)
-    :ensure t
     :general
      (vertico-map
      "C-J" 'vertico-next
      "C-k" 'vertico-previous)
      :init
      (vertico-mode 1))
+  (add-to-list 'load-path (expand-file-name "straight/build/vertico/extensions" user-emacs-directory))
   (use-package vertico-directory
+    :straight nil
                :after vertico
       :general
        (vertico-map
@@ -251,28 +271,23 @@ A nice package for completing things like file names, commands, and so much more
 For providing annotations for completions in the minibuffer.
 #+begin_src emacs-lisp
   (use-package marginalia
-    :ensure t
     :config (marginalia-mode))
 #+end_src
 ** Embark, Consult  and embark-consult
 #+begin_src emacs-lisp
   (use-package consult
-    :ensure t
-    :demand t
     :custom
     (completion-in-region-function #'consult-completion-in-region)
     :general
      ([remap switch-to-buffer] 'consult-buffer))
 
   (use-package embark
-    :ensure t
-    :demand t
     :general
      ([remap describe-bindings] 'embark-bindings
      "C-." 'embark-act))
 
   (use-package embark-consult
-               :ensure t
+
                :after (embark consult)
       :hook (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
@@ -280,25 +295,25 @@ For providing annotations for completions in the minibuffer.
 The complete anything framework. I used this a lot in college and through various frameworks, and so have grown to like it a lot.
 #+begin_src emacs-lisp
   (use-package company
-    :ensure t
+
     :custom
     (company-minimum-prefix-length 1)
     (company-idle-delay 0.0)
     :init
     (global-company-mode))
   (use-package company-box
-    :ensure t
+
     :hook (company-mode . company-box-mode))
 #+end_src
 *** Yasnippet
 For providing snippets for commonly typed things.
 #+BEGIN_SRC  emacs-lisp
   (use-package yasnippet
-    :ensure t
+
     :init
     (yas-global-mode 1))
   (use-package yasnippet-snippets
-    :ensure t
+
     :after yasnippet)
 #+END_SRC
 * org-mode
@@ -306,6 +321,7 @@ The note-taking, coffee brewing, all around awesome son of a gun.
 ** Base Mode
 #+begin_src emacs-lisp
   (use-package org
+
     :preface
     (defun org-setup ()
       "Hook functions for when we enter an org buffer, not provided by any other major mode."
@@ -317,7 +333,7 @@ The note-taking, coffee brewing, all around awesome son of a gun.
 For toggling org elements.
 #+begin_src emacs-lisp
   (use-package org-appear
-    :ensure t
+
     :after org
     :hook (org-mode . org-appear-mode))
 #+end_src
@@ -325,7 +341,7 @@ For toggling org elements.
 For enhancing the evil bindings when editing org buffers.
 #+begin_src emacs-lisp
   (use-package evil-org
-    :ensure t
+
     :after org
     :hook (org-mode . evil-org-mode)
     :config
@@ -335,8 +351,7 @@ For enhancing the evil bindings when editing org buffers.
 ** Making Tables of Contents
 [[https:github.com/alphapapa][Adam Porter]] makes some really good Emacs packages, namely org-maketoc which we will configure here.
 #+begin_src emacs-lisp
-  (use-package org-make-toc
-    :ensure t)
+  (use-package org-make-toc)
 #+end_src
 * Programming
 Various things for programming activities.
@@ -345,21 +360,19 @@ To the best of my knowledge, there are two packages that provide LSP support: LS
 #+begin_src emacs-lisp
   (use-package eglot
     :commands eglot-ensure
-    :ensure t
     :custom
     (eglot-autoshutdown t))
 #+end_src
 ** Syntax Checking With Flycheck
 #+begin_src emacs-lisp
   (use-package flycheck
-    :ensure t
     :init
     (global-flycheck-mode 1))
 #+end_src
 ** Automatically Balancing with Smartparens
 #+begin_src emacs-lisp
   (use-package smartparens
-    :ensure t
+
     :init
     (smartparens-strict-mode 1))
 #+end_src
@@ -370,29 +383,25 @@ Sly is a pretty good package for interacting with Common Lisp.
 #+begin_src emacs-lisp
   (use-package sly
     :custom (inferior-lisp-program "sbcl")
-    :hook (lisp-mode . sly-editing-mode)
-    :ensure t)
+    :hook (lisp-mode . sly-editing-mode))
   (use-package sly-asdf
-    :after sly
-    :ensure t)
+    :after sly)
   (use-package sly-quicklisp
-    :after sly
-    :ensure t)
+    :after sly)
 #+end_src
 *** Scheme
 Configure Emacs to interact with various Shemes. For now, GNU Guile will be the one I configure, since I intend to do work with Guix.
 #+begin_src emacs-lisp
   (use-package geiser
-    :ensure t
     :custom (scheme-program-name "guile"))
-  (use-package geiser-guile
-    :ensure t)
+  (use-package geiser-guile)
 #+end_src
 * Projects
 ** project.el
 The inbuilt project management system for Emacs. For the things I do, this works really well for me so I don't know that projectile is as necessary.
 #+begin_src emacs-lisp
   (use-package project
+    :straight nil
     :general
     (mapleader
       "SPC" '(consult-project-buffer :which-key "Switch to a buffer in a project")
@@ -408,13 +417,10 @@ The inbuilt project management system for Emacs. For the things I do, this works
         (project-remember-project "~/.emacs.d/"))))
 #+end_src
 
-#+RESULTS:
-
 ** Version Control
 *** magit
 #+begin_src emacs-lisp
   (use-package magit
-    :ensure t
     :custom
     (magit-delete-by-moving-to-trash nil)
     :commands magit-add-section-hook magit-status magit-stage-file
@@ -429,7 +435,6 @@ The inbuilt project management system for Emacs. For the things I do, this works
 ***** Forge
 #+begin_src emacs-lisp
   (use-package forge
-               :ensure t
                :after magit
                :general
                (mapleader
@@ -438,13 +443,12 @@ The inbuilt project management system for Emacs. For the things I do, this works
 ***** magit-gitflow
 #+begin_src emacs-lisp
   (use-package magit-gitflow
-      :ensure t
+
       :hook (magit-mode . turn-on-magit-gitflow))
 #+end_src
 ***** Git Time Machine
 #+begin_src emacs-lisp
   (use-package git-timemachine
-      :ensure t
       :general
       (mapleader
         "gt" '(git-timemachine-toggle :which-key "Toggle the time machine")))
@@ -458,14 +462,12 @@ There are a few things that I use.
 There is a wonderful package for editing nix files with Emacs, so let's take advantage of it.
 #+begin_src emacs-lisp
   (use-package nix-mode
-    :ensure t
     :mode "\\.nix\\'")
 #+end_src
 ** Kubernetes
 The behemoth of a container engine, but addmitedly interesting nonetheless.
 #+begin_src emacs-lisp
   (use-package kubernetes
-    :ensure t
     :general
     (mapleader
       "k" '(:ignore t :which-key "Kubernetes operations")
@@ -474,7 +476,7 @@ The behemoth of a container engine, but addmitedly interesting nonetheless.
 * Better Help With Helpful
 #+begin_src emacs-lisp
   (use-package helpful
-    :ensure t
+
     :general
      ([remap describe-function] 'helpful-callable
      [remap describe-key] 'helpful-key
@@ -483,14 +485,14 @@ The behemoth of a container engine, but addmitedly interesting nonetheless.
 * Which Key
 #+begin_src emacs-lisp
   (use-package which-key
-    :ensure t
+
     :init
     (which-key-mode 1))
 #+end_src
 * Restarting Emacs
 #+begin_src emacs-lisp
   (use-package restart-emacs
-    :ensure t
+
     :general
     (mapleader
      "qr" '(restart-emacs :which-key "Restart Emacs")))
@@ -503,11 +505,24 @@ I am going to use IRC as a bridge to things like IRC, Discord, etc.
 I quite like it and find it relatively useful as a bouncer, so let's make use of it.
 #+BEGIN_SRC  emacs-lisp
   (use-package ement
+    :straight (ement :type git :host github :repo "alphapapa/ement.el")
     :custom
-    (ement-initial-sync-timeout 10000)
-    :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
+    (ement-initial-sync-timeout 10000))
 #+END_SRC
-** Mastodon For communicating across the fedaverse. #+begin_src emacs-lisp (use-package mastodon :ensure t) #+end_src ** twittering Communication with Twitter. #+begin_src emacs-lisp (use-package twittering-mode :ensure t :custom (twittering-oauth-invoke-browser t) (twittering-allow-insecure-server-cert t)) #+end_src * Evil
+** Mastodon
+For communicating across the fedaverse.
+#+begin_src emacs-lisp
+  (use-package mastodon)
+#+end_src
+** twittering
+Communication with Twitter.
+#+begin_src emacs-lisp
+  (use-package twittering-mode
+    :custom
+    (twittering-oauth-invoke-browser t)
+    (twittering-allow-insecure-server-cert t))
+#+end_src
+* Evil
 ** undo-tree
 #+begin_quote
 Emacs has a powerful undo system. Unlike the standard undo/redo system in
@@ -530,9 +545,7 @@ was inspired by Vim. But, after all, most successful religions steal the
 best ideas from their competitors! --Toby Cubitt
 #+end_quote
 #+begin_src emacs-lisp
-
   (use-package undo-tree
-    :ensure t
     :init
     (global-undo-tree-mode 1))
 #+end_src
@@ -540,7 +553,6 @@ best ideas from their competitors! --Toby Cubitt
 Bring the power of vim-like bindings to Emacs.
 #+begin_src emacs-lisp
   (use-package evil
-               :ensure t
                :custom
                (evil-want-integration t)
                (evil-want-C-i-jump nil)
@@ -553,7 +565,6 @@ Bring the power of vim-like bindings to Emacs.
 For the mass evilification of Emacs modes.
 #+begin_src emacs-lisp
   (use-package evil-collection
-    :ensure t
                :after evil
                :config
                (evil-collection-init))
