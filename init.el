@@ -31,23 +31,19 @@
 (load custom-file))
 
 (customize-set-variable 'package-archives
-                          '(("melpa" . "https://melpa.org/packages/")
-                            ("gnu" . "https://elpa.gnu.org/packages/")))
+                          '(("melpa" . "https://melpa.org/packages/")))
+
 (package-initialize)
+(unless (package-installed-p 'quelpa)
+  (with-temp-buffer
+    (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+    (eval-buffer)
+    (quelpa-self-upgrade)))
 
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  (quelpa 'use-package)
 (require 'use-package)
-
-(use-package quelpa
-  :ensure t)
-
-(use-package quelpa-use-package
-  :ensure t
-  :after quelpa)
-
-(use-package no-littering :ensure t)
+(customize-variable 'use-package-ensure-function #'quelpa)
 
 (use-package no-littering :ensure t)
 
