@@ -514,7 +514,7 @@ I quite like it and find it relatively useful as a bouncer, so let's make use of
 #+BEGIN_SRC  emacs-lisp
   (use-package ement
     :custom
-    (ement-initial-sync-timeout 3600)
+    (ement-initial-sync-timeout 10000)
     :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
 #+END_SRC
 ** Mastodon For communicating across the fedaverse. #+begin_src emacs-lisp (use-package mastodon :ensure t) #+end_src ** twittering Communication with Twitter. #+begin_src emacs-lisp (use-package twittering-mode :ensure t :custom (twittering-oauth-invoke-browser t) (twittering-allow-insecure-server-cert t)) #+end_src * Evil

@@ -351,7 +351,7 @@
 
 (use-package ement
   :custom
-  (ement-initial-sync-timeout 3600)
+  (ement-initial-sync-timeout 10000)
   :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
 
 (use-package undo-tree
