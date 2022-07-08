@@ -311,69 +311,6 @@ For providing snippets for commonly typed things.
     :ensure t
     :after yasnippet)
 #+END_SRC
-* Communication
-Some external communication packages for talking with people across services such as IRC, Twitter, and the fedaverse.
-** Matrix
-I am going to use IRC as a bridge to things like IRC, Discord, etc.
-
-I quite like it and find it relatively useful as a bouncer, so let's make use of it.
-#+BEGIN_SRC  emacs-lisp
-  (use-package ement
-    :custom
-    (ement-initial-sync-timeout 3600)
-    :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
-#+END_SRC
-** Mastodon For communicating across the fedaverse. #+begin_src emacs-lisp (use-package mastodon :ensure t) #+end_src ** twittering Communication with Twitter. #+begin_src emacs-lisp (use-package twittering-mode :ensure t :custom (twittering-oauth-invoke-browser t) (twittering-allow-insecure-server-cert t)) #+end_src * Evil
-** undo-tree
-#+begin_quote
-Emacs has a powerful undo system. Unlike the standard undo/redo system in
-most software, it allows you to recover *any* past state of a buffer
-(whereas the standard undo/redo system can lose past states as soon as you
-redo). However, this power comes at a price: many people find Emacs' undo
-system confusing and difficult to use, spawning a number of packages that
-replace it with the less powerful but more intuitive undo/redo system.
-Both the loss of data with standard undo/redo, and the confusion of Emacs'
-undo, stem from trying to treat undo history as a linear sequence of
-changes. It's not. The `undo-tree-mode' provided by this package replaces
-Emacs' undo system with a system that treats undo history as what it is: a
-branching tree of changes. This simple idea allows the more intuitive
-behaviour of the standard undo/redo system to be combined with the power of
-never losing any history. An added side bonus is that undo history can in
-some cases be stored more efficiently, allowing more changes to accumulate
-before Emacs starts discarding history.
-The only downside to this more advanced yet simpler undo system is that it
-was inspired by Vim. But, after all, most successful religions steal the
-best ideas from their competitors! --Toby Cubitt
-#+end_quote
-#+begin_src emacs-lisp
-
-  (use-package undo-tree
-    :ensure t
-    :init
-    (global-undo-tree-mode 1))
-#+end_src
-** evil-mode
-Bring the power of vim-like bindings to Emacs.
-#+begin_src emacs-lisp
-  (use-package evil
-               :ensure t
-               :custom
-               (evil-want-integration t)
-               (evil-want-C-i-jump nil)
-               (evil-want-keybind nil)
-               (evil-undo-system 'undo-tree)
-               :init
-               (evil-mode 1))
-#+end_src
-** evil-collection
-For the mass evilification of Emacs modes.
-#+begin_src emacs-lisp
-  (use-package evil-collection
-    :ensure t
-               :after evil
-               :config
-               (evil-collection-init))
-#+end_src
 * org-mode
 The note-taking, coffee brewing, all around awesome son of a gun.
 ** Base Mode
@@ -567,6 +504,69 @@ The behemoth of a container engine, but addmitedly interesting nonetheless.
     :general
     (mapleader
      "qr" '(restart-emacs :which-key "Restart Emacs")))
+#+end_src
+* Communication
+Some external communication packages for talking with people across services such as IRC, Twitter, and the fedaverse.
+** Matrix
+I am going to use IRC as a bridge to things like IRC, Discord, etc.
+
+I quite like it and find it relatively useful as a bouncer, so let's make use of it.
+#+BEGIN_SRC  emacs-lisp
+  (use-package ement
+    :custom
+    (ement-initial-sync-timeout 3600)
+    :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
+#+END_SRC
+** Mastodon For communicating across the fedaverse. #+begin_src emacs-lisp (use-package mastodon :ensure t) #+end_src ** twittering Communication with Twitter. #+begin_src emacs-lisp (use-package twittering-mode :ensure t :custom (twittering-oauth-invoke-browser t) (twittering-allow-insecure-server-cert t)) #+end_src * Evil
+** undo-tree
+#+begin_quote
+Emacs has a powerful undo system. Unlike the standard undo/redo system in
+most software, it allows you to recover *any* past state of a buffer
+(whereas the standard undo/redo system can lose past states as soon as you
+redo). However, this power comes at a price: many people find Emacs' undo
+system confusing and difficult to use, spawning a number of packages that
+replace it with the less powerful but more intuitive undo/redo system.
+Both the loss of data with standard undo/redo, and the confusion of Emacs'
+undo, stem from trying to treat undo history as a linear sequence of
+changes. It's not. The `undo-tree-mode' provided by this package replaces
+Emacs' undo system with a system that treats undo history as what it is: a
+branching tree of changes. This simple idea allows the more intuitive
+behaviour of the standard undo/redo system to be combined with the power of
+never losing any history. An added side bonus is that undo history can in
+some cases be stored more efficiently, allowing more changes to accumulate
+before Emacs starts discarding history.
+The only downside to this more advanced yet simpler undo system is that it
+was inspired by Vim. But, after all, most successful religions steal the
+best ideas from their competitors! --Toby Cubitt
+#+end_quote
+#+begin_src emacs-lisp
+
+  (use-package undo-tree
+    :ensure t
+    :init
+    (global-undo-tree-mode 1))
+#+end_src
+** evil-mode
+Bring the power of vim-like bindings to Emacs.
+#+begin_src emacs-lisp
+  (use-package evil
+               :ensure t
+               :custom
+               (evil-want-integration t)
+               (evil-want-C-i-jump nil)
+               (evil-want-keybind nil)
+               (evil-undo-system 'undo-tree)
+               :init
+               (evil-mode 1))
+#+end_src
+** evil-collection
+For the mass evilification of Emacs modes.
+#+begin_src emacs-lisp
+  (use-package evil-collection
+    :ensure t
+               :after evil
+               :config
+               (evil-collection-init))
 #+end_src
 * Coda
 #+begin_src emacs-lisp

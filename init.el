@@ -219,32 +219,6 @@
   :ensure t
   :after yasnippet)
 
-(use-package ement
-  :custom
-  (ement-initial-sync-timeout 3600)
-  :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
-
-(use-package undo-tree
-  :ensure t
-  :init
-  (global-undo-tree-mode 1))
-
-(use-package evil
-             :ensure t
-             :custom
-             (evil-want-integration t)
-             (evil-want-C-i-jump nil)
-             (evil-want-keybind nil)
-             (evil-undo-system 'undo-tree)
-             :init
-             (evil-mode 1))
-
-(use-package evil-collection
-  :ensure t
-             :after evil
-             :config
-             (evil-collection-init))
-
 (use-package org
   :preface
   (defun org-setup ()
@@ -374,5 +348,31 @@
   :general
   (mapleader
    "qr" '(restart-emacs :which-key "Restart Emacs")))
+
+(use-package ement
+  :custom
+  (ement-initial-sync-timeout 3600)
+  :quelpa (ement :fetcher github :repo "alphapapa/ement.el"))
+
+(use-package undo-tree
+  :ensure t
+  :init
+  (global-undo-tree-mode 1))
+
+(use-package evil
+             :ensure t
+             :custom
+             (evil-want-integration t)
+             (evil-want-C-i-jump nil)
+             (evil-want-keybind nil)
+             (evil-undo-system 'undo-tree)
+             :init
+             (evil-mode 1))
+
+(use-package evil-collection
+  :ensure t
+             :after evil
+             :config
+             (evil-collection-init))
 
 ;;; init.el ends here
