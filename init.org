@@ -514,7 +514,9 @@ I quite like it and find it relatively useful as a bouncer, so let's make use of
   (use-package ement
     :straight (ement :type git :host github :repo "alphapapa/ement.el")
     :custom
-    (ement-initial-sync-timeout 10000))
+    (ement-save-sessions t)
+    (ement-initial-sync-timeout 10000)
+    :hook (ement-room-compose-hook . ement-room-compose-org))
 #+END_SRC
 ** Mastodon
 For communicating across the fedaverse.

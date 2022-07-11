@@ -346,7 +346,9 @@
 (use-package ement
   :straight (ement :type git :host github :repo "alphapapa/ement.el")
   :custom
-  (ement-initial-sync-timeout 10000))
+  (ement-save-sessions t)
+  (ement-initial-sync-timeout 10000)
+  :hook (ement-room-compose-hook . ement-room-compose-org))
 
 (use-package mastodon)
 
