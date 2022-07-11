@@ -395,6 +395,14 @@ Configure Emacs to interact with various Shemes. For now, GNU Guile will be the 
     :custom (scheme-program-name "guile"))
   (use-package geiser-guile)
 #+end_src
+* Configuration Languages
+Here are some config languages that I want to have configured.
+** yaml
+An abomination of a config language, but I need to have it around since so many things use it.
+#+BEGIN_SRC emacs-lisp
+  (use-package yaml-mode
+    :hook (yamml-mode . eglot-ensure))
+#+END_SRC
 * Projects
 ** project.el
 The inbuilt project management system for Emacs. For the things I do, this works really well for me so I don't know that projectile is as necessary.
