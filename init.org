@@ -287,7 +287,6 @@ For providing annotations for completions in the minibuffer.
      "C-." 'embark-act))
 
   (use-package embark-consult
-
                :after (embark consult)
       :hook (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
