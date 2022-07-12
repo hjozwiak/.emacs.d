@@ -223,7 +223,7 @@
   :after yasnippet)
 
 (use-package org
-
+  :demand t
   :preface
   (defun org-setup ()
     "Hook functions for when we enter an org buffer, not provided by any other major mode."
