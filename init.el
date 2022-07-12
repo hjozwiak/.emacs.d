@@ -343,20 +343,6 @@
   (mapleader
    "qr" '(restart-emacs :which-key "Restart Emacs")))
 
-(use-package ement
-  :straight (ement :type git :host github :repo "alphapapa/ement.el")
-  :custom
-  (ement-save-sessions t)
-  (ement-initial-sync-timeout 10000)
-  :hook (ement-room-compose . ement-room-compose-org))
-
-(use-package mastodon)
-
-(use-package twittering-mode
-  :custom
-  (twittering-oauth-invoke-browser t)
-  (twittering-allow-insecure-server-cert t))
-
 (use-package undo-tree
   :init
   (global-undo-tree-mode 1))
@@ -374,5 +360,24 @@
              :after evil
              :config
              (evil-collection-init))
+
+(use-package ement
+  :straight (ement :type git :host github :repo "alphapapa/ement.el")
+  :custom
+  (ement-save-sessions t)
+  (ement-initial-sync-timeout 10000)
+  :hook (ement-room-compose . ement-room-compose-org))
+
+(use-package notmuch
+  :straight nil)
+
+(use-package mastodon)
+
+(use-package twittering-mode
+  :custom
+(twittering-auth-method 'oauth)
+  (twittering-use-master-password t)
+  (twittering-oauth-invoke-browser t)
+  (twittering-allow-insecure-server-cert t))
 
 ;;; init.el ends here

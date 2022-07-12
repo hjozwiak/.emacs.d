@@ -504,33 +504,6 @@ The behemoth of a container engine, but addmitedly interesting nonetheless.
     (mapleader
      "qr" '(restart-emacs :which-key "Restart Emacs")))
 #+end_src
-* Communication
-Some external communication packages for talking with people across services such as IRC, Twitter, and the fedaverse.
-** Matrix
-I am going to use IRC as a bridge to things like IRC, Discord, etc.
-
-I quite like it and find it relatively useful as a bouncer, so let's make use of it.
-#+BEGIN_SRC  emacs-lisp
-  (use-package ement
-    :straight (ement :type git :host github :repo "alphapapa/ement.el")
-    :custom
-    (ement-save-sessions t)
-    (ement-initial-sync-timeout 10000)
-    :hook (ement-room-compose . ement-room-compose-org))
-#+END_SRC
-** Mastodon
-For communicating across the fedaverse.
-#+begin_src emacs-lisp
-  (use-package mastodon)
-#+end_src
-** twittering
-Communication with Twitter.
-#+begin_src emacs-lisp
-  (use-package twittering-mode
-    :custom
-    (twittering-oauth-invoke-browser t)
-    (twittering-allow-insecure-server-cert t))
-#+end_src
 * Evil
 ** undo-tree
 #+begin_quote
@@ -577,6 +550,41 @@ For the mass evilification of Emacs modes.
                :after evil
                :config
                (evil-collection-init))
+#+end_src
+* Communication
+Some external communication packages for talking with people across services such as IRC, Twitter, and the fedaverse.
+** Matrix
+I am going to use IRC as a bridge to things like IRC, Discord, etc.
+
+I quite like it and find it relatively useful as a bouncer, so let's make use of it.
+#+BEGIN_SRC  emacs-lisp
+  (use-package ement
+    :straight (ement :type git :host github :repo "alphapapa/ement.el")
+    :custom
+    (ement-save-sessions t)
+    (ement-initial-sync-timeout 10000)
+    :hook (ement-room-compose . ement-room-compose-org))
+#+END_SRC
+** Notmuch
+A mail reader for Emacs.
+#+begin_src emacs-lisp
+  (use-package notmuch
+    :straight nil)
+#+end_src
+** Mastodon
+For communicating across the fedaverse.
+#+begin_src emacs-lisp
+  (use-package mastodon)
+#+end_src
+** twittering
+Communication with Twitter.
+#+begin_src emacs-lisp
+  (use-package twittering-mode
+    :custom
+  (twittering-auth-method 'oauth)
+    (twittering-use-master-password t)
+    (twittering-oauth-invoke-browser t)
+    (twittering-allow-insecure-server-cert t))
 #+end_src
 * Coda
 #+begin_src emacs-lisp
