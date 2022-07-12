@@ -282,6 +282,8 @@
     "SPC" '(consult-project-buffer :which-key "Switch to a buffer in a project")
     "p" '(:ignore t :which-key "Project operations.")
     "pc" '(project-compile :which-key "Compile the project")
+    "pd" '(project-dired :which-key "Open a dired buffer for this project")
+    "pe" '(project-eshell :which-key "Open esheel for this project")
     "pf" '(project-find-file :which-key "Search for a file within a project")
     "pp" '(project-switch-project :which-key "Switch to a project")
     "ps" '(magit-project-status :which-key "Git status of a project")
