@@ -81,7 +81,8 @@
   "hi" '(:ignore t :which-key "info things")
   "hii" '(info :which-key "Enter the info index")
   "q" '(:ignore t :which-key "Closing Emacs itself or frames within.")
-  "qQ" '(kill-emacs :which key "Leave Emacs.")))
+  "qq" '(save-buffers-kill-terminal :which-key "Save the open buffers and close this connection")
+  "qQ" '(kill-emacs :which key "Kill Emmacs permanently")))
 
 (use-package exec-path-from-shell
 
