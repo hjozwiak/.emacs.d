@@ -292,6 +292,7 @@
       (project-remember-project "~/.emacs.d/"))))
 
 (use-package magit
+  :demand t
   :custom
   (magit-delete-by-moving-to-trash nil)
   :commands magit-add-section-hook magit-status magit-stage-file

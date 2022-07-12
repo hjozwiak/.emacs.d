@@ -429,6 +429,7 @@ The inbuilt project management system for Emacs. For the things I do, this works
 *** magit
 #+begin_src emacs-lisp
   (use-package magit
+    :demand t
     :custom
     (magit-delete-by-moving-to-trash nil)
     :commands magit-add-section-hook magit-status magit-stage-file
