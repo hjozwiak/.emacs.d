@@ -281,7 +281,6 @@
   (mapleader
     "SPC" '(consult-project-buffer :which-key "Switch to a buffer in a project")
     "p" '(:ignore t :which-key "Project operations.")
-    "pa" '(project-remember-project :which-key "Add a project to the list")
     "pc" '(project-compile :which-key "Compile the project")
     "pf" '(project-find-file :which-key "Search for a file within a project")
     "pp" '(project-switch-project :which-key "Switch to a project")
