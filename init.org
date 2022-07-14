@@ -90,7 +90,7 @@ This package keeps your config directory clean of cruft that will accumulate ove
 This is a handy utility for creating keybindings, as well as a few other things that I don't really make much use of.
 #+begin_src emacs-lisp
   (use-package general
-
+    :demand t
     :config
     (general-evil-setup)
     (general-create-definer mapleader
@@ -101,6 +101,7 @@ This is a handy utility for creating keybindings, as well as a few other things 
       (mapleader
     "b" '(:ignore t :which-key "Buffer management")
     "bb" '(switch-to-buffer :which-key "Buffer management")
+    "bi" '(ibuffer :which-key "Interactive buffer management")
     "bn" '(next-buffer :which-key "Next buffer")
     "bd" '(evil-delete-buffer :which-key "Kill a buffer")
     "bp" '(previous-buffer :which-key "Previous buffer")
@@ -120,10 +121,11 @@ This is a handy utility for creating keybindings, as well as a few other things 
     "hdk" '(describe-key :which-key "Show the documentation for the function associated with key")
     "hdv" '(describe-variable :which-key "Show the docs for a variable")
     "hi" '(:ignore t :which-key "info things")
+    "hia" '(info-apropos :which-key "Search for matches of a term in the database")
     "hii" '(info :which-key "Enter the info index")
     "q" '(:ignore t :which-key "Closing Emacs itself or frames within.")
     "qq" '(save-buffers-kill-terminal :which-key "Save the open buffers and close this connection")
-    "qQ" '(kill-emacs :which key "Kill Emmacs permanently")))
+    "qQ" '(kill-emacs :which key "Kill Emacs permanently")))
 #+end_src
 ** Executing System Commands
 exec-path-from shell is quite handy for building a path for us to use in Emacs, so we should take advantage of this.

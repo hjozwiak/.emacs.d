@@ -49,7 +49,7 @@
 (use-package no-littering)
 
 (use-package general
-
+  :demand t
   :config
   (general-evil-setup)
   (general-create-definer mapleader
@@ -60,6 +60,7 @@
     (mapleader
   "b" '(:ignore t :which-key "Buffer management")
   "bb" '(switch-to-buffer :which-key "Buffer management")
+  "bi" '(ibuffer :which-key "Interactive buffer management")
   "bn" '(next-buffer :which-key "Next buffer")
   "bd" '(evil-delete-buffer :which-key "Kill a buffer")
   "bp" '(previous-buffer :which-key "Previous buffer")
@@ -79,10 +80,11 @@
   "hdk" '(describe-key :which-key "Show the documentation for the function associated with key")
   "hdv" '(describe-variable :which-key "Show the docs for a variable")
   "hi" '(:ignore t :which-key "info things")
+  "hia" '(info-apropos :which-key "Search for matches of a term in the database")
   "hii" '(info :which-key "Enter the info index")
   "q" '(:ignore t :which-key "Closing Emacs itself or frames within.")
   "qq" '(save-buffers-kill-terminal :which-key "Save the open buffers and close this connection")
-  "qQ" '(kill-emacs :which key "Kill Emmacs permanently")))
+  "qQ" '(kill-emacs :which key "Kill Emacs permanently")))
 
 (use-package exec-path-from-shell
 
