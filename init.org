@@ -562,6 +562,7 @@ I am going to use IRC as a bridge to things like IRC, Discord, etc.
 I quite like it and find it relatively useful as a bouncer, so let's make use of it.
 #+BEGIN_SRC  emacs-lisp
   (use-package ement
+    :demand t
     :straight (ement :type git :host github :repo "alphapapa/ement.el")
     :custom
     (ement-save-sessions t)

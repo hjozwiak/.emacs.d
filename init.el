@@ -365,6 +365,7 @@
              (evil-collection-init))
 
 (use-package ement
+  :demand t
   :straight (ement :type git :host github :repo "alphapapa/ement.el")
   :custom
   (ement-save-sessions t)
