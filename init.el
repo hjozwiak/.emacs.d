@@ -83,6 +83,7 @@
   "hdf" '(describe-function :which-key "Describe a function")
   "hdF" '(describe-face :which-key "Describe a face")
   "hdk" '(describe-key :which-key "Show the documentation for the function associated with key")
+  "hdm" '(describe-mode :which-key "Describe the current mode")
   "hdv" '(describe-variable :which-key "Show the docs for a variable")
   "hi" '(:ignore t :which-key "info things")
   "hia" '(info-apropos :which-key "Search for matches of a term in the database")
