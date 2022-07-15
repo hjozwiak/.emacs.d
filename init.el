@@ -87,6 +87,7 @@
   "hi" '(:ignore t :which-key "info things")
   "hia" '(info-apropos :which-key "Search for matches of a term in the database")
   "hii" '(info :which-key "Enter the info index")
+  "him" '(info-display-manual :which-key "Open a manual directly")
   "q" '(:ignore t :which-key "Closing Emacs itself or frames within.")
   "qq" '(save-buffers-kill-terminal :which-key "Save the open buffers and close this connection")
   "qQ" '(kill-emacs :which key "Kill Emacs permanently")))
