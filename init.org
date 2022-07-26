@@ -407,6 +407,11 @@ Configure Emacs to interact with various Shemes. For now, GNU Guile will be the 
     :custom (scheme-program-name "guile"))
   (use-package geiser-guile)
 #+end_src
+** Rust
+From what I've experienced, Rustic mode is pretty good and appears to be the de facto standard nowadays.
+#+BEGIN_SRC  emacs-lisp
+  (use-package rustic)
+#+END_SRC
 * Configuration Languages
 Here are some config languages that I want to have configured.
 ** yaml

@@ -283,6 +283,8 @@
   :custom (scheme-program-name "guile"))
 (use-package geiser-guile)
 
+(use-package rustic)
+
 (use-package yaml-mode
   :hook (yamml-mode . eglot-ensure))
 
