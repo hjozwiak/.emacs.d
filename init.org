@@ -410,7 +410,8 @@ Configure Emacs to interact with various Shemes. For now, GNU Guile will be the 
 ** Rust
 From what I've experienced, Rustic mode is pretty good and appears to be the de facto standard nowadays.
 #+BEGIN_SRC  emacs-lisp
-  (use-package rustic)
+  (use-package rustic
+    :custom (rustic-lsp-client 'eglot))
 #+END_SRC
 * Configuration Languages
 Here are some config languages that I want to have configured.
