@@ -310,9 +310,6 @@ The complete anything framework. I used this a lot in college and through variou
     (company-idle-delay 0.0)
     :init
     (global-company-mode))
-  (use-package company-box
-
-    :hook (company-mode . company-box-mode))
 #+end_src
 *** Yasnippet
 For providing snippets for commonly typed things.

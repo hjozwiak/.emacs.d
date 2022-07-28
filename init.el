@@ -219,9 +219,6 @@
   (company-idle-delay 0.0)
   :init
   (global-company-mode))
-(use-package company-box
-
-  :hook (company-mode . company-box-mode))
 
 (use-package yasnippet
 
