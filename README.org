@@ -1,0 +1,13 @@
+#+title: Emacs Configuration, Basic Setup And Other Notes
+#+author: Hunter Jozwiak <hunter.t.joz@gmail.com>
+#+language: en
+
+* Introduction
+Welcome to my personal Emacs configuration. This is pretty much my personal configuration, but you are welcometo steal from it and/or copy blocks out of it.
+* Org Mode
+I write my configuration in an org style, using babel code blocks. You can keep this style, or you can do something else entirely if you wish. [[info:org#Top][Have a read of the org manual to get more information.]]
+* Emacspeak
+I make use of Emacspeak nowadays, so you will need to install it. I keep track of it as a submodule in this repository, so you can recursively clone this repository if you want and run the make in there. Naturally, you'll need to build the speech server you want to use, and be sure that you have the requisite system libraries available. [[info:emacspeak#Top][Please have a read of the Emacspeak info manual.]]
+* Interested?
+Come with me around the corner, friend; I've got loads more to tell you.
+#+include: "./init.org"
