@@ -1,0 +1,38 @@
+#+TITLE: My Elfeed Feeds
+#+AUTHOR: Hunter Jozwiak
+
+* Blogs :elfeed:
+** Software Development :dev:
+*** Tooling :tools:
+**** [[https://www.mend.io/blog/feed/][Mend Renovate Blog]]
+*** Emacs :emacs:
+**** [[https://karthinks.com/index.xml][Karthink's Blog]]
+**** [[https://protesilaos.com/master.xml][Prot's Blog]]
+*** Scheme :scheme:
+**** [[https://www.greghendershott.com/feeds/all.rss.xml][Greg Hendershott's Blog]]
+*** Rust Blogs :rust:
+**** [[https://blog.rust-lang.org/feed.xml][The Main Rust Blog]]
+**** [[https://blog.rust-lang.org/inside-rust/feed.xml][Inside Rust]]
+*** Go :go:
+**** [[https://blog.golang.org/feed.atom][The Go Language Blog]]
+*** Crystal :crystal:
+**** [[https://crystal-lang.org/feed.xml][The Crystal Website Feed]]
+** Blockchains :blockchains:
+*** Solana :solana:
+**** [[https://lorisleiva.com/rss][Loris's Blog]]
+*** Ethereum :ethereum:
+**** [[https://blog.ethereum.org/en/feed.xml][Ethereum Foundation Blog]]
+** Operating Systems :os:
+*** Guix :guix:
+**** [[https://guix.gnu.org/feeds/blog.atom][The Guix Blog]]
+**** [[https://blog.lispy.tech/feed.xml][The Lispy.tech blog]]
+*** Nixos :nixos:
+**** [[https://nixos.org/blog/announcements-rss.xml][NixOS Announcements]]
+**** [[https://nixos.org/blog/stories-rss.xml][Nixos Stories]]
+*** Void Linux :void:
+**** [[https://voidlinux.org/atom.xml][Void Linux News]]
+** Communications :comm:
+*** XMPP :xmpp:
+**** [[https://blog.prosody.im/index.xml][The Prosody Blog]]
+*** Matrix :matrix:
+**** [[https://matrix.org/atom.xml][The Matrix Blog]]
