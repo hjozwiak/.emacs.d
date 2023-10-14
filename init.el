@@ -57,6 +57,7 @@
     :prefix ","
     :global-prefix "SPC m")
   (mapleader
+    "a" '(:ignore t :which-key "Applications")
     "b" '(:ignore t :which-key "Buffer operations")
     "bd" '(kill-current-buffer :wk "Kill the current buffer")
     "br" '(revert-buffer :wk "Revert the current buffer")
