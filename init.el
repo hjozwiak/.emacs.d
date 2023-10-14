@@ -59,6 +59,7 @@
   (mapleader
     "a" '(:ignore t :which-key "Applications")
     "b" '(:ignore t :which-key "Buffer operations")
+    "bb" 'switch-to-buffer
     "bd" '(kill-current-buffer :wk "Kill the current buffer")
     "br" '(revert-buffer :wk "Revert the current buffer")
     "c" '(:ignore t :which-key "Customization")
