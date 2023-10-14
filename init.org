@@ -1,0 +1,881 @@
+#+title:  My Emacs Configuration
+#+author: Hunter Jozwiak <hunter.t.joz@gmail.com>
+#+language: en
+#+startup: fold
+#+seq_todo: todo draft done(!)
+
+* Early  Initialization
+:properties:
+:header-args:emacs-lisp: :tangle ./early-init.el :lexical  yes
+:end:
+
+Here are a few things that I want to have done **before** Emacs starts loading in my configuration.
+** Disable Some UI Elements
+I don't really make use of the tool bars, and I don't want to see the startup message.
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+  (setq inhibit-startup-message t
+        toolbar-mode nil
+        menu-bar-mode nil)
+  (push '(tool-bar-lines . 0) default-frame-alist)
+  (push '(menu-bar-lines . 0) default-frame-alist)
+  (push '(vertical-scroll-bars) default-frame-alist)
+#+end_src
+** Have a Higher Garbage Collection Threshhold
+LSP mode will need this further on down the line, so let's enable a higher garbage collection threshhold (roughly 2 GB).
+#+begin_src emacs-lisp
+  (setq gc-cons-threshold 2000000000)
+
+#+end_src
+** A Higher Read Process Maximum
+LSP doctor suggested this setting to me, so I think we had better implement this tweak.
+#+begin_src emacs-lisp
+  (setq read-process-output-max (* 1024 1024))
+#+end_src
+** Load the Newest Version of Files
+I want to have the compiled versions load, and the newest versions at that.
+#+begin_src emacs-lisp
+  (setq load-prefer-newer  t)
+#+end_src
+
+* Initialization itself
+:properties:
+:header-args:emacs-lisp: :tangle ./init.el :lexical yes
+:end:
+
+Now we can get into the meat and potatoes of Emacs configuration; a long journey that will take a while to get right.
+** The Default Coding System
+I live in a UTF-8 world, so let's have as much of that as we can.
+#+begin_src  emacs-lisp
+  ;;; init.el --- Stripped down Emacs configuration.   -*- lexical-binding: t; -*-
+
+  (set-default-coding-systems 'utf-8-unix)
+#+end_src
+** Identify Myself
+Message mode, gnus, and a few other modes need this to be set so that they have a good idea of who I am and can therefore insert proper values.
+#+begin_src  emacs-lisp
+  (setopt user-full-name "Hunter Jozwiak"
+          user-mail-address "hunter.t.joz@gmail.com")
+#+end_src
+** The Custom File
+Let's change the place where the custom settings are written out to.
+#+begin_src  emacs-lisp
+  (setopt custom-file (expand-file-name "var/custom.el" user-emacs-directory))
+  (unless (file-exists-p custom-file)
+    (make-empty-file custom-file t))
+
+#+end_src
+** Packages
+A few tweaks to the package system, namely adding a a few new repositories and setting the priorities.
+*** The Melpa Repo
+Melpa is a pretty expansive place for getting packages, so let's add it on to the list of packages.
+#+begin_src  emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+#+end_src
+*** Tweak Priorities
+I would prefer to get  my packages first from Melpa, then from GNU Elpa, and then fall back to non-GNU if either of those two fail.
+#+begin_src  emacs-lisp
+  (setopt package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
+
+#+end_src
+*** Package Quickstarting
+I'm not entirely sure what this does, but it is apparently meant to make starting packages a lot faster by adding things to the load path. To be honest, I'm not sure how much use-package can benefit from this, since it manages a bunch of the autoloads on its own.
+#+begin_src  emacs-lisp
+  (setopt package-quickstart t
+          package-quickstart-file (expand-file-name "var/package-quickstart.el"))
+  ;; We had better guard against the fact that the file doesn't exist.
+  (unless (file-exists-p package-quickstart-file)
+    (make-empty-file package-quickstart-file t))
+#+end_src
+** use-package
+Let's go back to use-package since we're using the Emacs 29 git branch.
+#+begin_src emacs-lisp
+  (setopt use-package-expand-minimally t)
+#+end_src
+*** Other Modules
+There are a few handy things that we can get for use-package, which will configure below.
+** Keybindings and Other things
+*** Evil
+A vim layer for Emacs. I had done the vanilla bindings for quite some time now, but I find I want to go back to the vim way of doing things.
+#+begin_src emacs-lisp
+  (use-package evil
+    :ensure t
+    :init
+    (setopt evil-want-integration t
+            evil-want-keybinding nil
+            evil-want-C-i-jump nil
+            evil-respect-visual-line-mode t
+            evil-want-C-h-delete t
+            evil-undo-system 'undo-redo)
+    :config
+    (evil-mode 1))
+#+end_src
+*** Evil Collection
+For the mass evilification of modes.
+#+begin_src emacs-lisp
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :config
+    (evil-collection-init))
+#+end_src
+*** General
+An easy way to write keybindings, especially when taking into account evil mode.
+#+begin_src emacs-lisp
+  (use-package general
+    :ensure t
+    :demand t
+    :config
+    (general-evil-setup t)
+    (general-create-definer mapleader
+      :states '(normal visual insert emacs)
+      :keymaps 'override
+      :prefix "SPC"
+      :global-prefix "C-SPC")
+    ;; Useful for local bindings
+    (general-create-definer maplocal
+      :states '(normal visual)
+      :keymaps 'override
+      :prefix ","
+      :global-prefix "SPC m")
+    (mapleader
+      "b" '(:ignore t :which-key "Buffer operations")
+      "bd" '(kill-current-buffer :wk "Kill the current buffer")
+      "br" '(revert-buffer :wk "Revert the current buffer")
+      "c" '(:ignore t :which-key "Customization")
+      "cc" 'customize
+      "cf" 'customize-face
+      "cg" 'customize-group
+      "cv" 'customize-variable
+      "g" '(:ignore t :which-key "Git bindings")
+      ;; Bindings defined elsewhere
+      "h" '(:ignore t :which-key "Help")
+      "ha" 'apropos
+      "hd" '(:ignore t :which-key "Describe parts of Emacs")
+      "hdb" 'describe-bindings
+      "hdc" 'describe-key-briefly
+      "hdf" 'describe-function
+      "hdF" 'describe-face
+      "hdk" 'describe-key
+      "hdm" 'describe-mode
+      "hdM" 'describe-map
+      "hds" 'describe-symbol
+      "hdv" 'describe-variable
+      "he" 'view-echo-area-messages
+      "hi" '(:ignore t :which-key "Info")
+      "hia" 'info-apropos
+      "hii" 'info
+      "him" 'info-display-manual
+      "hl" 'view-lossage
+      "o" '(:ignore t :which-key "Org")))
+#+end_src
+** Some Question Fixes
+I don't want to have to type yes or no for each question, so let's turn on short answers.
+#+begin_src  emacs-lisp
+  (setopt use-short-answers t
+          use-dialog-box nil
+          use-file-dialog nil)
+#+end_src
+** No Littering
+We need to keep things clean, so let's not have everything dumped into .emacs.d.
+#+begin_src  emacs-lisp
+  (use-package no-littering
+    :ensure t
+    :demand t)
+#+end_src
+** Reverting
+If something happens to a file on disk that you are visiting in an Emacs buffer, you'd want to see those changes pretty quickly, I'd imagine. Let's make it happen.
+#+begin_src  emacs-lisp
+  (setopt auto-revert-avoid-polling t
+          auto-revert-check-vc-info t
+          global-auto-revert-non-file-buffers t
+          global-auto-revert-mode t)
+#+end_src
+** Copyrights
+If you want to automatically update the copyright of a file, call copyright-update before you save things.
+#+begin_src emacs-lisp
+  (setopt copyright-year-ranges t)
+  (add-hook 'before-save-hook #'copyright-update)
+#+end_src
+** Saving Command History
+It's really handy for completing things.
+#+begin_src  emacs-lisp
+  (setopt savehist-mode t
+          savehist-autosave-interval 30)
+#+end_src
+** Recent Files
+#+begin_src emacs-lisp
+  (use-package recentf
+    :init
+    (setopt recentf-mode t)
+    :config
+    (add-to-list 'recentf-exclude no-littering-etc-directory)
+    (add-to-list 'recentf-exclude no-littering-var-directory))
+#+end_src
+** Moving Around Windows
+#+begin_src emacs-lisp
+  (use-package windmove
+    :general
+    (mapleader
+      "wl" 'windmove-right
+      "wh" 'windmove-left
+      "wk" 'windmove-up
+      "wj" 'windmove-down))
+#+end_src
+** Keep Track of Window Configurations
+#+begin_src emacs-lisp
+  (use-package winner
+    :general
+    (mapleader
+      "wu" 'winner-undo
+      "wr" 'winner-redo)
+    :init
+    (setopt winner-mode t))
+#+end_src
+** Authentication
+#+begin_src emacs-lisp
+  (setopt auth-source-debug t
+          auth-source-cache-expiry nil)
+  (when (executable-find "pass")
+    (auth-source-pass-enable))
+#+end_src
+*** The pass Utility
+There is now built in support for the pass password manager, so let's take advantage of that.
+#+begin_src emacs-lisp
+  (use-package pass
+    :when (executable-find "pass")
+    :ensure t)
+#+end_src
+
+** GPG
+#+begin_src emacs-lisp
+  (setopt epg-pinentry-mode 'loopback)
+#+end_src
+** Shell Execution
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :init
+    (setopt exec-path-from-shell-variables '("PATH" "MANPATH" "LSP_USE_PLISTS"))
+    (exec-path-from-shell-initialize))
+#+end_src
+** Magit
+The best interface to git, IMHO.
+*** Core
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t
+    :general
+    (mapleader
+      "gg" 'magit
+      "gs" 'magit-stage-file
+      "pm" 'magit-project-status)
+    :init
+    (setopt magit-delete-by-moving-to-trash nil)
+    :config
+    (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules 'magit-insert-stashes))
+#+end_src
+*** Forges
+For working with various git services from within the comfort of Emacs.
+#+begin_src emacs-lisp
+  (use-package forge
+    :ensure t
+    :after magit)
+#+end_src
+*** Gitflow
+#+begin_src emacs-lisp
+  (use-package magit-gitflow
+    :ensure t
+    :hook ((magit-mode . turn-on-magit-gitflow)))
+#+end_src
+*** Timemachine
+#+begin_src  emacs-lisp
+  (use-package git-timemachine
+    :ensure t)
+#+end_src
+** Completion
+*** Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :demand  t
+    :ensure t
+    :init
+    (setopt completion-styles
+            '(orderless)
+            completion-category-overrides
+            '((file
+               (styles partial-completion)))))
+#+end_src
+*** Vertico
+#+begin_src  emacs-lisp
+  (defun emacspeak--vertico-directory-delete-char-speak (&optional n)
+    (interactive "p")
+    (unless (and (eq (char-before) ?/) (vertico-directory-up n))
+      (dtk-tone-deletion)
+      (emacspeak-speak-this-char (char-before))
+      (delete-char (- n))))
+  (use-package vertico
+    :ensure t
+    :general
+    (vertico-map
+     "C-j" 'vertico-next
+     "C-k" 'vertico-previous)
+    :init
+    (setopt vertico-count 20
+            vertico-cycle t
+            vertico-mode t))
+  (use-package vertico-directory
+    :after vertico
+    :hook
+    (rfn-eshadow-update-overlay . vertico-directory-tidy)
+    :general
+    (vertico-map
+     "C-l" 'vertico-directory-enter
+     "C-h" 'vertico-directory-up
+     "DEL" 'vertico-directory-delete-char
+     "M-DEL" 'vertico-directory-delete-word)
+    :config
+      (advice-add 'vertico-directory-delete-char :override #'emacspeak--vertico-directory-delete-char-speak))
+#+end_src
+*** Consult
+#+begin_src  emacs-lisp
+  (use-package consult
+    :ensure t
+    :general
+    ([remap switch-to-buffer] 'consult-buffer
+     [remap switch-to-buffer-other-window] 'consult-buffer-other-window
+     [remap yank-pop] 'consult-yank-pop
+     [remap goto-line] 'consult-goto-line
+     [remap project-switch-to-buffer] 'consult-project-buffer
+     [remap imenu] 'consult-imenu
+     [remap man] 'consult-man)
+    (maplocal
+      "x" 'consult-mode-command))
+#+end_src
+*** Embark and Friends
+#+begin_src  emacs-lisp
+  (use-package embark
+    :ensure t
+    :init
+    (setopt prefix-help-command #'embark-prefix-help-command)
+    :general
+    ([remap describe-bindings] 'embark-bindings
+     "C-<menu>" 'embark-dwim
+     "<menu>" 'embark-act))
+
+  (use-package embark-consult
+    :ensure t
+    :after embark consult
+    :hook ((embark-collect-mode . consult-preview-at-point-mode)))
+#+end_src
+*** Marginalia
+#+begin_src  emacs-lisp
+  (use-package marginalia
+    :ensure t
+    :init
+    (setopt marginalia-mode t)
+    :general
+    (minibuffer-mode-map
+     "M-r" 'marginalia-cycle))
+#+end_src
+*** Corfu
+#+begin_src  emacs-lisp
+  (defvar-local corfu--last-spoken-index nil "Index of the last spoken candidate.")
+  (defvar-local corfu--last-spoken nil "The last spoken candidate")
+  (defun emacspeak--speak-corfu--exhibit (&optional auto)
+    "Speak the candidates as presented by Corfu."
+    (when (and corfu--candidates (>= (length corfu--candidates) 0))
+      (let ((to-speak nil)
+            (new-cand (substring (nth corfu--index corfu--candidates) (if (>= (length corfu--candidates) 0)
+                                                                          (length corfu--base)
+                                                                        0))))
+        (unless (equal corfu--last-spoken new-cand)
+          (push new-cand to-speak)
+          (when (or (equal corfu--index corfu--last-spoken-index)
+                    (and (not (equal corfu--index -1))
+                         (equal corfu--last-spoken-index -1)))
+            (push "candidate" to-speak)))
+        (when to-speak
+          (dtk-speak (mapconcat #'identity to-speak " ")))
+        (setq-local corfu--last-spoken-index corfu--index
+                    corfu--last-spoken new-cand))))
+  (defun emacspeak-speak-corfu-insertion (orig &rest args)
+    "Speak the currently inserted candidate."
+    (let ((old-point (point)))
+      (prog1
+          (apply orig args)
+        (emacspeak-auditory-icon 'complete)
+        (emacspeak-speak-region old-point (point)))))
+
+  (use-package corfu
+    :ensure t
+    :general
+    (corfu-map
+     "C-j" 'corfu-next
+     "C-k" 'corfu-previous)
+    :init
+    (setopt corfu-cycle t
+            corfu-count 20
+            corfu-auto-delay 0.0
+            corfu-auto t
+            global-corfu-mode  t)
+    :config
+    (advice-add 'corfu-insert :around #'emacspeak-speak-corfu-insertion)
+    (advice-add 'corfu--exhibit :after #'emacspeak--speak-corfu--exhibit))
+#+end_src
+*** Completion at Point Extensions
+#+begin_src  emacs-lisp
+  (use-package cape
+    :ensure t
+    :config
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent))
+#+end_src
+*** Snippets
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :init
+    (setopt yas-global-mode t))
+  (use-package yasnippet-snippets
+    :after yasnippet
+    :ensure t
+    :config
+    (yas-reload-all))
+#+end_src
+** Programming Basics
+*** Treesitter
+I was in a hellfire hurry to get Emacs 29 to take advantage of the treesitter support, but I've not configured it; let's fix that today.
+#+begin_src emacs-lisp
+  (use-package treesit
+    :when (and (fboundp 'treesit-available-p) (treesit-available-p))
+    :init
+    (setopt major-mode-remap-alist
+            '((c-mode . c-ts-mode)
+              (c++-mode . c++-ts-mode)
+              (csharp-mode . csharp-ts-mode)
+              (conf-toml-mode . toml-ts-mode)
+              (css-mode . css-ts-mode)
+              (java-mode . java-ts-mode)
+              (javascript-mode . js-ts-mode)
+              (js-json-mode . json-ts-mode)
+              (python-mode . python-ts-mode)
+              (ruby-mode . ruby-ts-mode)
+              (sh-mode . bash-ts-mode))))
+#+end_src
+*** No Indent of Tabs
+#+begin_src  emacs-lisp
+  (setopt indent-tabs-mode nil)
+#+end_src
+*** Syntax Checking
+#+begin_src  emacs-lisp
+  (use-package flymake
+    :ensure t
+    :hook prog-mode
+    :bind
+    (:map flymake-mode-map
+          ("M-p" . flymake-goto-prev-error)
+          ("M-n" . flymake-goto-next-error)))
+#+end_src
+*** Eglot
+It's high time to give Eglot another try and see how things have evolved since I last tried it.
+#+begin_src  emacs-lisp
+  (use-package eglot
+    :init
+    (setopt eglot-autoshutdown t)
+    :hook
+    ((lua-mode typescript-ts-mode js-ts-mode yaml-ts-mode python-ts-mode rust-ts-mode) . eglot-ensure))
+#+end_src
+*** Project Management
+Time to go back to the original project management system built into Emacs.
+#+begin_src  emacs-lisp
+  (use-package project
+    :general
+    (mapleader
+      "pb" 'project-switch-to-buffer
+      "pd" 'project-dired
+      "pe" 'project-eshell
+      "pf" 'project-find-file
+      "pp" 'project-switch-project
+      "pr" 'project-remember-projects-under
+      "ps" 'project-shell))
+#+end_src
+*** Cross References
+#+begin_src  emacs-lisp
+  (setopt  xref-search-program (if (executable-find "rg") 'ripgrep 'grep)
+           xref-show-xrefs-function #'consult-xref
+           xref-show-definitions-function #'consult-xref)
+#+end_src
+*** Node Modules
+#+begin_src  emacs-lisp
+  (use-package add-node-modules-path
+    :ensure t
+    :hook
+    ((web-mode typescript-ts-mode js-ts-mode tsx-mode) . add-node-modules-path))
+#+end_src
+*** Speedbar
+#+begin_src  emacs-lisp
+  (setopt speedbar-frame-parameters '((name . "speedbar")
+                                      (title . "speedbar")
+                                      (minibuffer . nil)
+                                      (unsplittable . t)
+                                      (border-height . 2)
+                                      (menu-bar-lines . 0)
+                                      (tool-bar-lines . 0)
+                                      (left-fringe . 10))
+          speedbar-update-flag t)
+#+end_src
+** Various Other Configuration Languages
+There are some text-modes that we can treesitterify, so this section is mainly meant for that.
+*** Yaml File
+Not my favorite configuration language, but might as well set it up.
+#+begin_src emacs-lisp
+  (use-package yaml-ts-mode
+    :after treesit
+    :mode "\\.ya?ml\\'")
+#+end_src
+*** Cmake
+It's a build system for C/C++ things. I don't use it that much, but let's set it up in the event I need to do so.
+#+begin_src emacs-lisp
+  (use-package cmake-ts-mode
+    :after treesit
+    :mode "\\(?:CmakeLists\\.txt\\|\\.cmake\\)\\'")
+#+end_src
+** Programming Languages
+*** Emacs Lisp
+**** Demos
+#+begin_src emacs-lisp
+  (use-package elisp-demos
+    :ensure t
+    :config
+    (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1))
+#+end_src
+**** Macro Expanding With Macrostep
+#+begin_src emacs-lisp
+  (use-package macrostep
+    :ensure t
+    :general
+    (maplocal
+      "m" '(:ignore t :which-key "Macros")
+      "me" 'macrostep-expand))
+#+end_src
+*** Rust
+#+begin_src emacs-lisp
+  (use-package rust-ts-mode
+    :after treesit
+    :mode "\\.rs\\'")
+
+  (use-package cargo
+    :hook (rust-ts-mode . cargo-minor-mode)
+    :ensure t)
+#+end_src
+*** done Javascript
+- State "done"       from "draft"      [2023-06-03 Sat 17:44]
+There is a a bunch of things I could do here, so I will need to do some research. For now, I'm just going to have it leverage the treesitter mode handle things.
+*** Typescript
+#+begin_src emacs-lisp
+  (use-package typescript-ts-mode
+    :after treesit
+    :mode "\\.ts\\'"
+    ("\\.tsx\\'" . tsx-ts-mode))
+#+end_src
+*** Web Programming and Associates
+I used to use web-mode for a lot of things, but with the advent of treesitter I'm not sure what I can delegate off to it. I know HTML is a given.
+**** HTML TS Mode
+Let's start out with this, at the very least.
+#+begin_src emacs-lisp
+  (use-package html-ts-mode
+    :after treesit
+    :mode "\\.html\\'")
+#+end_src
+*** web-mode Itself
+Here is the rest of the legacy configuration I had.
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :mode ".vue$" ".svelte$")
+#+end_src
+**** Emmet
+This is a templating system for HTML pages; I don't quite know how to use it yet.
+#+begin_src emacs-lisp
+  (use-package emmet-mode
+    :ensure t
+    :hook web-mode html-ts-mode)
+#+end_src
+*** Lisps
+#+begin_src  emacs-lisp
+  (use-package sly
+    :ensure t
+    :hook (lisp-mode .  sly-editing-mode)
+    :init
+    (setopt inferior-lisp-program "sbcl"))
+  (use-package sly-asdf
+    :ensure t
+    :after sly)
+  (use-package sly-quicklisp
+    :ensure t
+    :after sly)
+  (use-package sly-repl-ansi-color
+    :ensure t
+    :after sly)
+#+end_src
+**** Lispy
+#+begin_src emacs-lisp
+  (defun conditionally-enable-lispy ()
+    "Turn on lisp mode conditionally for evaluating things in the buffer."
+    (when (eq this-command 'eval-expression) (lispy-mode 1)))
+  (use-package lispy
+    :ensure t
+    :hook
+    ((emacs-lisp-mode scheme-mode) . lispy-mode)
+    (minibuffer-setup . conditionally-enable-lispy)
+    :init
+    (setopt lispy-compat '(macrostep edebug)))
+  (use-package lispyville
+    :ensure t
+    :hook (lispy-mode . lispyville-mode))
+#+end_src
+*** Schemes
+#+begin_src  emacs-lisp
+  (defun which-scheme ()
+    "Determine the default scheme I should use given installed executables."
+    (cond
+     ((executable-find "guile") 'guile)
+     ((executable-find "chibi-scheme") 'chibi)
+     ((or (executable-find  "gosh") (executable-find "gauche")) 'gauche)
+     ((executable-find "racket")  'racket)))
+  (use-package geiser
+    :ensure t
+    :init
+    (setopt geiser-default-implementation (which-scheme)))
+
+  (use-package geiser-guile
+    :ensure t
+    :after geiser
+    :when (executable-find "guile"))
+
+
+  (use-package geiser-chibi
+    :ensure t
+    :after geiser
+    :when (executable-find "chibi-scheme"))
+
+  (use-package geiser-gauche
+    :ensure t
+    :after geiser
+    :when (or (executable-find  "gosh") (executable-find "gauche")))
+
+  (use-package geiser-racket
+    :ensure t
+    :after geiser
+    :when (executable-find "racket"))
+#+end_src
+*** Lua
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :ensure t)
+#+end_src
+** Gnus and Friends
+*** Caching
+For imap servers,  i.e. my Gmail, I don't think this will have any effect; it might, however, be useful if I should try another backend.
+#+begin_src   emacs-lisp
+  (setopt gnus-use-cache t
+          gnus-cache-directory (no-littering-expand-var-file-name "gnus/cache/")
+          gnus-cache-active-file (expand-file-name "active" gnus-cache-directory))
+#+end_src
+*** Asynchronous Operations
+These should hopefully speed up gnus and not block the interface as much.
+#+begin_src emacs-lisp
+  (setopt gnus-asynchronous t
+          gnus-use-article-prefetch t
+          gnus-use-header-prefetch t)
+#+end_src
+*** Select Method and SMTP Settings
+The bare minimum to get things working with gnus. I'll just default it to gmail for now.
+#+begin_src emacs-lisp
+  (setopt gnus-select-method '(nnimap "gmail"
+                                      (nnimap-address "imap.gmail.com")
+                                      (nnimap-server-port "imaps")
+                                      (nnimap-stream ssl))
+          smtpmail-smtp-server "smtp.gmail.com"
+          smtpmail-smtp-service 587
+          smtpmail-smtp-user "hunter.t.joz@gmail.com"
+          smtpmail-debug-info t
+          gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+#+end_src
+*** Message Composition
+#+begin_src  emacs-lisp
+  (setopt mml-secure-openpgp-sign-with-sender t
+          message-send-mail-function #'smtpmail-send-it)
+
+  (add-hook 'message-setup-hook  #'mml-secure-message-sign)
+#+end_src
+*** Composing Messages in Org Format
+#+begin_src  emacs-lisp
+  (use-package org-mime
+    :ensure t
+    :hook (message-send . org-mime-htmlize))
+#+end_src
+** Jabber
+#+begin_src  emacs-lisp
+  (setopt use-package-hook-name-suffix nil)
+  (use-package hexrgb
+    :vc (:url "https://github.com/emacsmirror/hexrgb" :rev :newest))
+  (use-package jabber
+    :hook
+    (jabber-post-connect-hooks . jabber-keepalive-start)
+    :ensure t
+    :general
+    (mapleader
+      "aj" '(:ignore t :which-key "Jabber")
+      "aja" 'jabber-connect-all
+      "ajc" 'jabber-chat-with
+      "ajm" 'jabber-muc-join)
+    :init
+    (setopt jabber-account-list '(("sektor@lounge.hunterjozwiak.com"))
+            jabber-activity-mode nil
+            jabber-auto-reconnect t
+            jabber-backlog-days nil
+            jabber-chat-foreign-prompt "%n> "
+            jabber-chat-local-prompt "%n> "
+            jabber-default-priority 20
+            jabber-default-status "Hacking the good hack."
+            jabber-groupchat-prompt-format "%n> "))
+  (setopt use-package-hook-name-suffix "-hook")
+#+end_src
+** Mastodon
+#+begin_src  emacs-lisp
+  (use-package mastodon
+    :ensure t
+    :general
+    (mapleader
+      "am" '(:ignore t :which-key "Mastodon")
+      "amm" 'mastodon
+      "amt" 'mastodon-toot)
+    :init
+    (setopt mastodon-instance-url "https://social.hunterjozwiak.com"
+            mastodon-active-user "sektor"
+            mastodon-auth-source-file "~/.authinfo.gpg"))
+#+end_src
+** Media
+*** Spotify
+#+begin_src  emacs-lisp
+  (use-package espotify
+    :ensure t
+    :init
+    (setopt espotify-use-system-bus-p nil
+            espotify-service-name "spotify"
+            espotify-client-id (auth-source-pass-get "id" "apps/spotify")
+            espotify-client-secret (auth-source-pass-get 'secret "apps/spotify")))
+
+  (use-package consult-spotify
+    :ensure t)
+#+end_src
+*** empv
+For interacting with the mpv utility, i.e. watching YouTube and such. Naturally, it also supports livestreams.
+#+begin_src emacs-lisp
+  (use-package empv
+    :ensure t
+    :init
+    (setopt empv-invidious-instance "https://invid.hunterjozwiak.com/api/v1")
+    :general
+    (mapleader
+      "ae" 'empv-map))
+#+end_src
+*** Calibredb
+#+begin_src  emacs-lisp
+  (use-package calibredb
+    :ensure t
+    :init
+    (setopt calibredb-root-dir (expand-file-name "~/Calibre Library/")
+            calibredb-db-data-dir (expand-file-name "metadata.db" calibredb-root-dir)
+            calibredb-library-alist '((calibredb-db-root-dir))))
+#+end_src
+*** Elfeed and Plugins
+A useful integration for reading RSS feeds.
+**** Core
+#+begin_src  emacs-lisp
+  (use-package elfeed
+    :ensure t
+    :general
+    (mapleader
+      "ar" 'elfeed))
+#+end_src
+**** Managing Feeds with Org Mode
+#+begin_src emacs-lisp
+  (use-package elfeed-org
+    :after elfeed
+    :ensure t
+    :config
+    (elfeed-org))
+#+end_src
+** Writing In General
+Here are some tweaks to various writing modes that I use on a daily basis.
+*** Spell Checking
+Let's make a few tweaks to flyspell so that it will work better for us.
+Specifically, set the spellchecker program to =aspell= and set some extra flags for it. Probably not a good idea to wrap these into a use-package form under flyspell but it'll do until we can get setopt.
+#+begin_src emacs-lisp
+  (use-package jit-spell
+    :ensure t
+    :init
+    (setopt ispell-program-name "aspell"
+            ispell-extra-args '("--sug-mode=ultra" "--keyboard=standard")
+            ispell-dictionary "english"
+            dictionary-server "dict.org")
+    :hook text-mode prog-mode)
+#+end_src
+*** Org Mode
+The mode that is being used to write this very configuration document; it needs a **lot** of tweaking though.
+**** The Core Org
+#+begin_src emacs-lisp
+  (use-package org
+    :general
+    (mapleader
+      "oa" 'org-agenda
+      "oc" 'org-capture
+      "ol" 'org-store-link)
+    :init
+    (setopt org-link-descriptive t
+            org-return-follows-link t
+            org-hide-emphasis-markers t))
+#+end_src
+**** Org Appear
+#+begin_src emacs-lisp
+  (use-package org-appear
+    :ensure t
+    :hook org-mode)
+#+end_src
+** System Integrations
+*** EDNC
+#+begin_src emacs-lisp
+  (use-package ednc
+    :ensure t
+    :init
+    (setopt ednc-mode t))
+#+end_src
+** Sundry things
+*** Emacs Garbage Collection Statistics
+This is an effort for gathering information about garbage collection in Emacs.
+#+begin_src emacs-lisp
+  (use-package emacs-gc-stats
+    :ensure t
+    :init
+    (setopt emacs-gc-stats-remind t
+            emacs-gc-stats-mode t))
+#+end_src
+** Emacspeak
+#+begin_src  emacs-lisp
+  (use-package emacspeak-setup
+    :unless (featurep 'emacspeak)
+    :load-path "emacspeak/lisp/"
+    :init
+    (setopt espeak-default-speech-rate 820
+            emacspeak-character-echo nil
+            emacspeak-word-echo nil
+            emacspeak-play-emacspeak-startup-icon nil)
+    :config
+    (emacspeak-sounds-select-theme (expand-file-name "3d/" emacspeak-sounds-directory)))
+#+end_src
