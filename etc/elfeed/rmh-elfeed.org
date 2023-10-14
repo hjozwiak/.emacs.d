@@ -8,6 +8,7 @@
 *** Emacs :emacs:
 **** [[https://karthinks.com/index.xml][Karthink's Blog]]
 **** [[https://protesilaos.com/master.xml][Prot's Blog]]
+**** [[https://sachachua.com/blog/feed][Sacha Chua's Blog]]
 *** Scheme :scheme:
 **** [[https://www.greghendershott.com/feeds/all.rss.xml][Greg Hendershott's Blog]]
 *** Rust Blogs :rust:
