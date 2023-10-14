@@ -51,6 +51,13 @@ I live in a UTF-8 world, so let's have as much of that as we can.
 
   (set-default-coding-systems 'utf-8-unix)
 #+end_src
+** use-package
+Let's go back to use-package since we're using the Emacs 29 git branch.
+#+begin_src emacs-lisp
+  (setopt use-package-expand-minimally t)
+#+end_src
+*** Other Modules
+There are a few handy things that we can get for use-package, which will configure below.
 ** Identify Myself
 Message mode, gnus, and a few other modes need this to be set so that they have a good idea of who I am and can therefore insert proper values.
 #+begin_src  emacs-lisp
@@ -88,13 +95,6 @@ I'm not entirely sure what this does, but it is apparently meant to make startin
   (unless (file-exists-p package-quickstart-file)
     (make-empty-file package-quickstart-file t))
 #+end_src
-** use-package
-Let's go back to use-package since we're using the Emacs 29 git branch.
-#+begin_src emacs-lisp
-  (setopt use-package-expand-minimally t)
-#+end_src
-*** Other Modules
-There are a few handy things that we can get for use-package, which will configure below.
 ** Keybindings and Other things
 *** Evil
 A vim layer for Emacs. I had done the vanilla bindings for quite some time now, but I find I want to go back to the vim way of doing things.

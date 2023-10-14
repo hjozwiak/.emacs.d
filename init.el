@@ -2,6 +2,8 @@
 
 (set-default-coding-systems 'utf-8-unix)
 
+(setopt use-package-expand-minimally t)
+
 (setopt user-full-name "Hunter Jozwiak"
         user-mail-address "hunter.t.joz@gmail.com")
 
@@ -19,8 +21,6 @@
 ;; We had better guard against the fact that the file doesn't exist.
 (unless (file-exists-p package-quickstart-file)
   (make-empty-file package-quickstart-file t))
-
-(setopt use-package-expand-minimally t)
 
 (use-package evil
   :ensure t
