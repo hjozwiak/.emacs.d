@@ -32,12 +32,6 @@ LSP doctor suggested this setting to me, so I think we had better implement this
 #+begin_src emacs-lisp
   (setq read-process-output-max (* 1024 1024))
 #+end_src
-** Load the Newest Version of Files
-I want to have the compiled versions load, and the newest versions at that.
-#+begin_src emacs-lisp
-  (setq load-prefer-newer  t)
-#+end_src
-
 * Initialization itself
 :properties:
 :header-args:emacs-lisp: :tangle ./init.el :lexical yes

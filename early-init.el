@@ -9,5 +9,3 @@
 (setq gc-cons-threshold 2000000000)
 
 (setq read-process-output-max (* 1024 1024))
-
-(setq load-prefer-newer  t)
