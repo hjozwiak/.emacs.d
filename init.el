@@ -2,7 +2,8 @@
 
 (set-default-coding-systems 'utf-8-unix)
 
-(setopt use-package-expand-minimally t)
+(setopt use-package-expand-minimally t
+        use-package-always-demand t)
 
 (setopt user-full-name "Hunter Jozwiak"
         user-mail-address "hunter.t.joz@gmail.com")
@@ -15,12 +16,6 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 (setopt package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
-
-(setopt package-quickstart t
-        package-quickstart-file (expand-file-name "var/package-quickstart.el"))
-;; We had better guard against the fact that the file doesn't exist.
-(unless (file-exists-p package-quickstart-file)
-  (make-empty-file package-quickstart-file t))
 
 (use-package evil
   :ensure t
@@ -559,7 +554,7 @@
   (setopt empv-invidious-instance "https://invid.hunterjozwiak.com/api/v1")
   :general
   (mapleader
-    "ae" 'empv-map))
+    "ae" empv-map))
 
 (use-package calibredb
   :ensure t

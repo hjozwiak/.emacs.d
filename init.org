@@ -48,7 +48,8 @@ I live in a UTF-8 world, so let's have as much of that as we can.
 ** use-package
 Let's go back to use-package since we're using the Emacs 29 git branch.
 #+begin_src emacs-lisp
-  (setopt use-package-expand-minimally t)
+  (setopt use-package-expand-minimally t
+          use-package-always-demand t)
 #+end_src
 *** Other Modules
 There are a few handy things that we can get for use-package, which will configure below.
@@ -79,15 +80,6 @@ I would prefer to get  my packages first from Melpa, then from GNU Elpa, and the
 #+begin_src  emacs-lisp
   (setopt package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
 
-#+end_src
-*** Package Quickstarting
-I'm not entirely sure what this does, but it is apparently meant to make starting packages a lot faster by adding things to the load path. To be honest, I'm not sure how much use-package can benefit from this, since it manages a bunch of the autoloads on its own.
-#+begin_src  emacs-lisp
-  (setopt package-quickstart t
-          package-quickstart-file (expand-file-name "var/package-quickstart.el"))
-  ;; We had better guard against the fact that the file doesn't exist.
-  (unless (file-exists-p package-quickstart-file)
-    (make-empty-file package-quickstart-file t))
 #+end_src
 ** Keybindings and Other things
 *** Evil
@@ -779,7 +771,7 @@ For interacting with the mpv utility, i.e. watching YouTube and such. Naturally,
     (setopt empv-invidious-instance "https://invid.hunterjozwiak.com/api/v1")
     :general
     (mapleader
-      "ae" 'empv-map))
+      "ae" empv-map))
 #+end_src
 *** Calibredb
 #+begin_src  emacs-lisp
