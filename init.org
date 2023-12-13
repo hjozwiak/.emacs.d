@@ -707,32 +707,14 @@ The bare minimum to get things working with gnus. I'll just default it to gmail 
     :ensure t
     :hook (message-send . org-mime-htmlize))
 #+end_src
-** Jabber
-#+begin_src  emacs-lisp
-  (setopt use-package-hook-name-suffix nil)
-  (use-package hexrgb
-    :vc (:url "https://github.com/emacsmirror/hexrgb" :rev :newest))
-  (use-package jabber
-    :hook
-    (jabber-post-connect-hooks . jabber-keepalive-start)
+** Matrix
+After using XMPP for a good while now, I think it it sime to go back to Matrix, as there are a few things I like better about Ement and Element/Element X over the various XMPP clients.
+#+begin_src emacs-lisp
+  (use-package ement
     :ensure t
-    :general
-    (mapleader
-      "aj" '(:ignore t :which-key "Jabber")
-      "aja" 'jabber-connect-all
-      "ajc" 'jabber-chat-with
-      "ajm" 'jabber-muc-join)
     :init
-    (setopt jabber-account-list '(("sektor@lounge.hunterjozwiak.com"))
-            jabber-activity-mode nil
-            jabber-auto-reconnect t
-            jabber-backlog-days nil
-            jabber-chat-foreign-prompt "%n> "
-            jabber-chat-local-prompt "%n> "
-            jabber-default-priority 20
-            jabber-default-status "Hacking the good hack."
-            jabber-groupchat-prompt-format "%n> "))
-  (setopt use-package-hook-name-suffix "-hook")
+    (setopt ement-save-sessions t
+            ement-room-send-message-filter 'ement-room-send-org-filter))
 #+end_src
 ** Mastodon
 #+begin_src  emacs-lisp

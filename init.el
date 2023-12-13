@@ -500,30 +500,11 @@
   :ensure t
   :hook (message-send . org-mime-htmlize))
 
-(setopt use-package-hook-name-suffix nil)
-(use-package hexrgb
-  :vc (:url "https://github.com/emacsmirror/hexrgb" :rev :newest))
-(use-package jabber
-  :hook
-  (jabber-post-connect-hooks . jabber-keepalive-start)
+(use-package ement
   :ensure t
-  :general
-  (mapleader
-    "aj" '(:ignore t :which-key "Jabber")
-    "aja" 'jabber-connect-all
-    "ajc" 'jabber-chat-with
-    "ajm" 'jabber-muc-join)
   :init
-  (setopt jabber-account-list '(("sektor@lounge.hunterjozwiak.com"))
-          jabber-activity-mode nil
-          jabber-auto-reconnect t
-          jabber-backlog-days nil
-          jabber-chat-foreign-prompt "%n> "
-          jabber-chat-local-prompt "%n> "
-          jabber-default-priority 20
-          jabber-default-status "Hacking the good hack."
-          jabber-groupchat-prompt-format "%n> "))
-(setopt use-package-hook-name-suffix "-hook")
+  (setopt ement-save-sessions t
+          ement-room-send-message-filter 'ement-room-send-org-filter))
 
 (use-package mastodon
   :ensure t
