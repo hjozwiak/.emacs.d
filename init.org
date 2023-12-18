@@ -714,6 +714,7 @@ After using XMPP for a good while now, I think it it sime to go back to Matrix, 
     :ensure t
     :init
     (setopt ement-save-sessions t
+            evil-collection-ement-want-auto-retro t
             ement-room-send-message-filter 'ement-room-send-org-filter))
 #+end_src
 ** Mastodon

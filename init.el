@@ -504,6 +504,7 @@
   :ensure t
   :init
   (setopt ement-save-sessions t
+          evil-collection-ement-want-auto-retro t
           ement-room-send-message-filter 'ement-room-send-org-filter))
 
 (use-package mastodon
