@@ -618,7 +618,7 @@ This is a templating system for HTML pages; I don't quite know how to use it yet
   (use-package lispy
     :ensure t
     :hook
-    ((emacs-lisp-mode scheme-mode) . lispy-mode)
+    emacs-lisp-mode scheme-mode lisp-mode
     (minibuffer-setup . conditionally-enable-lispy)
     :init
     (setopt lispy-compat '(macrostep edebug)))

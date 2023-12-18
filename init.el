@@ -429,7 +429,7 @@
 (use-package lispy
   :ensure t
   :hook
-  ((emacs-lisp-mode scheme-mode) . lispy-mode)
+  emacs-lisp-mode scheme-mode lisp-mode
   (minibuffer-setup . conditionally-enable-lispy)
   :init
   (setopt lispy-compat '(macrostep edebug)))
