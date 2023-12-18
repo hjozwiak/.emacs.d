@@ -843,10 +843,10 @@ This is an effort for gathering information about garbage collection in Emacs.
     :unless (featurep 'emacspeak)
     :load-path "emacspeak/lisp/"
     :init
-    (setopt espeak-default-speech-rate 820
-            emacspeak-character-echo nil
+    (setopt emacspeak-character-echo nil
             emacspeak-word-echo nil
             emacspeak-play-emacspeak-startup-icon nil)
     :config
+    (dtk-set-rate 465 t)
     (emacspeak-sounds-select-theme (expand-file-name "3d/" emacspeak-sounds-directory)))
 #+end_src
