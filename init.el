@@ -23,7 +23,7 @@
   (setopt evil-want-integration t
           evil-want-keybinding nil
           evil-want-C-i-jump nil
-          evil-respect-visual-line-mode t
+          evil-respect-visual-line-mode nil
           evil-want-C-h-delete t
           evil-undo-system 'undo-redo)
   :config
