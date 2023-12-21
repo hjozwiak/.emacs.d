@@ -2,8 +2,7 @@
 
 (set-default-coding-systems 'utf-8-unix)
 
-(setopt use-package-expand-minimally t
-        use-package-always-demand t)
+(setopt use-package-expand-minimally t)
 
 (setopt user-full-name "Hunter Jozwiak"
         user-mail-address "hunter.t.joz@gmail.com")
